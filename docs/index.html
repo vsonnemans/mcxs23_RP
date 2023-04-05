@@ -156,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Interest rates on three-month treasury bills</p></li>
 <li><p>Consumer sentiment indicator</p></li>
 </ul>
-<p>Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption.</p>
+<p>Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, the market rate of treasury bills controls for the monetary policy effect on consumption and disposable income is included for the income effect on consumption.</p>
 <div class="cell">
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: zoo</code></pre>
@@ -230,6 +230,7 @@ Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}
 \end{aligned}
 \]</span></p>
 <p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times5\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(5\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(5\times p))\times 5\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times5\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
+<p>In the continuation of this research proposal, we will make assumptions on the priors distribution and a possible extension of this model could be to check if other priors could lead to better results. Moreover, we will estimate the matrix A to understand the relationship between those variables.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
