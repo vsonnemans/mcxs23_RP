@@ -91,8 +91,8 @@ plot(sent[,1], y=sent[,1], type = "l",
 
 ```
 
-As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen. 
 ------------------------------------------------------------------------
+As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. 
 
 ## The model
 
@@ -104,10 +104,10 @@ y_t & =\mu_0+A_1 y_{t-1}+\cdots+A_p y_{t-p}+\epsilon_t \\\epsilon_t \mid Y_{t-1}
 \end{aligned}
 $$
 
-Where $N=6$ and $y_t$ is the vector of 6 variables:
+Where $N=5$ and $y_t$ is the vector of 6 variables:
 
 $$
-y_t=\left(\begin{array}{cc}\operatorname{PCE}_t & =\text { PCE } \\\operatorname{GT}_t & =\text { Google Trends index } \\\operatorname{totaltax}_t & =\text { tax revenue } \\\text { nontax }_t & =\text { non-tax revenue } \\\text { pubinv }_t & =\text { government gross fixed capital formation } \\\text { pubtrans }_t & =\text { social assitance and benefits payments } \\\text { pubcons }_t & =\text { government final consumption } \\\text { cashrate }_t & =\text { cash rate target } \\\text { Ma }_t & =\text { M3 money supply }
+y_t=\left(\begin{array}{cc}\operatorname{pce}_t & =\text { PCE } \\\operatorname{GT}_t & =\text { Google Trends index } \\\operatorname{inc}_t & =\text { Real household disposable income } \\\text { int }_t & =\text { Interest rates on three-month treasury bills} \\\text { sent }_t & =\text { Consumer sentiment indicator } 
 \end{array}\right)
 $$
 
@@ -119,7 +119,7 @@ Y & =X A+E \\E \mid X & \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}_{T \tim
 \end{aligned}
 $$
 
-Where $Y$ is a $T\times6$ matrix, $X$ is a $T\times(1+(6\times p))$, $A$ is a $(1+(6\times p))\times 6$ matrix that contains the relationships between the variables and $E$ is a $T\times6$. T and p are yet to be determined during the continuation of this research project.
+Where $Y$ is a $T\times5$ matrix, $X$ is a $T\times(1+(5\times p))$, $A$ is a $(1+(5\times p))\times 5$ matrix that contains the relationships between the variables and $E$ is a $T\times5$. T and p are yet to be determined during the continuation of this research project.
 
 ## References
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
@@ -143,6 +143,3 @@ Lazer, D., Kennedy, R., King, G., & Vespignani, A. (2014). The Parable of Google
 Schmidt, T., & Vosen, S. (2009). Forecasting Private Consumption: Survey-Based Indicators vs. Google Trends. Journal of Forecasting, 30. https://doi.org/10.2139/ssrn.1514369
 
 
-
-```
-## References {.unnumbered}
