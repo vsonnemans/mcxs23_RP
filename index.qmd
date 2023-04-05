@@ -30,7 +30,7 @@ To forecast PCE, we will construct a dataset which contains two types of variabl
 
 The traditional variables included in this analysis were collected from the readrba package and will be:
 
--   Household final consumption expenditure
+-   Household final consumption expenditure 
 
 -   Real household disposable income
 
@@ -91,6 +91,7 @@ plot(sent[,1], y=sent[,1], type = "l",
 
 ```
 
+As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen. 
 ------------------------------------------------------------------------
 
 ## The model
