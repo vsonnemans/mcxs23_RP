@@ -210,7 +210,7 @@ Attaching package: 'zoo'</code></pre>
 </div>
 </div>
 <hr>
-<p>As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen.</p>
+<p>As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. Moreover, Google Trends have been quite extensively studied to forecast labor market indicators but only a few articles have focused on PCE.</p>
 </section>
 <section id="the-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-model">The model</h2>
@@ -232,7 +232,7 @@ Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}
 \end{aligned}
 \]</span></p>
 <p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times5\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(5\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(5\times p))\times 5\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times5\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
-<p>In the continuation of this research proposal, we will make assumptions on the priors distribution and a possible extension of this model could be to check if other priors could lead to better results. Moreover, we will estimate the matrix A to understand the relationship between those variables.</p>
+<p>In the continuation of this research project, we will make assumptions on the priors distribution and a possible extension of this model could be to check if other priors could lead to better results. Moreover, we will estimate the matrix A to understand the relationship between those variables. The objective will be to identify whether alternative data can improve the forecast accuracy of PCE.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
