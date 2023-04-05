@@ -1,5 +1,5 @@
 ---
-title: "My Research project"
+title: "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data"
 author: "Victoria Sonnemans"
 
 execute:
@@ -12,7 +12,61 @@ bibliography: references.bib
 >
 > **Keywords.** bsvars, impulse responses, quarto, R, tax shocks
 
-# Introduction
+## The question, objective and motivation
+
+### Objective
+
+### Research question
+
+### Motivation
+
+## The data and their properties
+
+To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.
+
+The traditional variables included in this analysis were collected from the readrba package and will be:
+
+-   Household final consumption expenditure
+
+-   Real household disposable income
+
+-   Interest rates on three-month treasury bills
+
+-   Consumer sentiment indicator
+
+Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the "Big Data hubris" trap introduced by (Lazer et al., 2014). The "Big Data Hubris" is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption.
+
+------------------------------------------------------------------------
+
+## The model
+
+The model used for the forecasting experiment is a VAR(p) model:
+
+$$
+\begin{aligned}
+y_t & =\mu_0+A_1 y_{t-1}+\cdots+A_p y_{t-p}+\epsilon_t \\\epsilon_t \mid Y_{t-1} & \sim i i d \mathcal{N}_N\left(\mathbf{0}_N, \Sigma\right)
+\end{aligned}
+$$
+
+Where $N=6$ and $y_t$ is the vector of 6 variables:
+
+$$
+y_t=\left(\begin{array}{cc}\operatorname{PCE}_t & =\text { PCE } \\\operatorname{GT}_t & =\text { Google Trends index } \\\operatorname{totaltax}_t & =\text { tax revenue } \\\text { nontax }_t & =\text { non-tax revenue } \\\text { pubinv }_t & =\text { government gross fixed capital formation } \\\text { pubtrans }_t & =\text { social assitance and benefits payments } \\\text { pubcons }_t & =\text { government final consumption } \\\text { cashrate }_t & =\text { cash rate target } \\\text { Ma }_t & =\text { M3 money supply }
+\end{array}\right)
+$$
+
+The model can also be written in matrix notation:
+
+$$
+\begin{aligned}
+Y & =X A+E \\E \mid X & \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}_{T \times N}, \Sigma, I_T\right)
+\end{aligned}
+$$
+
+Where $Y$ is a $T\times6$ matrix, $X$ is a $T\times(1+(6\times p))$, $A$ is a $(1+(6\times p))\times 6$ matrix that contains the relationships between the variables and $E$ is a $T\times6$. T and p are yet to be determined during the continuation of this research project.
+
+## References
+
 
 
 ```
