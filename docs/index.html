@@ -94,11 +94,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link active" data-scroll-target="#the-question-objective-and-motivation">The question, objective and motivation</a>
   <ul class="collapse">
-  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">Objective</a></li>
   <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">Research question</a></li>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#objective-and-motivation" id="toc-objective-and-motivation" class="nav-link" data-scroll-target="#objective-and-motivation">Objective and Motivation</a></li>
   </ul></li>
   <li><a href="#the-data-and-their-properties" id="toc-the-data-and-their-properties" class="nav-link" data-scroll-target="#the-data-and-their-properties">The data and their properties</a></li>
+  <li><a href="#as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." id="toc-as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." class="nav-link" data-scroll-target="#as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen.">As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen.</a></li>
   <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -136,14 +136,15 @@ ul.task-list li input[type="checkbox"] {
 </blockquote>
 <section id="the-question-objective-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="the-question-objective-and-motivation">The question, objective and motivation</h2>
-<section id="objective" class="level3">
-<h3 class="anchored" data-anchor-id="objective">Objective</h3>
-</section>
 <section id="research-question" class="level3">
 <h3 class="anchored" data-anchor-id="research-question">Research question</h3>
+<p>Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in Australia? Which combination of traditional and alternative data provides the highest accuracy in the latter indicator?</p>
 </section>
-<section id="motivation" class="level3">
-<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
+<section id="objective-and-motivation" class="level3">
+<h3 class="anchored" data-anchor-id="objective-and-motivation">Objective and Motivation</h3>
+<p>As it drives around 50% of the Australian GDP, Household Final Consumption Expenditures (PCE) is a leading indicator to gauge the economic health of a country. There is thus a high incentive to improve the accuracy of its predictions. This has encouraged researchers to investigate big data as alternative sources. For instance, Schimdt and Vosen (2011) use search query time-series provided by Google Trends to forecast consumption. Esteves (2009), Aprigliano, et al.&nbsp;(2019), Galbraith and Tkacz (2013), Carlsen and Storgaard (2010) analyze electronic payments to predict consumption as these can track a large percentage of spending activities. Ellingsen, et al.&nbsp;(2021) demonstrate that news media data capture information about consumption that hard economic indicators do not. Gil et al.&nbsp;(2018) investigate the potential of the Economic Policy Uncertainty index derived from news data and developed by Baker et al.&nbsp;(2016) to predict consumption.</p>
+<p>Despite the recognized superiority of Bayesian VARs in macroeconomic predictions, there is nearly no research on the combination of Bayesian VARs and alternative data. Existing articles either investigate the use of Bayesian estimation models or of alternative data to forecast indicators but do not consider both together.</p>
+<p>This paper will compare the forecasts of PCE in Australia from Bayesian VARs and several extensions applied on different sets of variables. These datasets will include both traditional macroeconomic variables computed by statistical offices and alternative data such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE.</p>
 </section>
 </section>
 <section id="the-data-and-their-properties" class="level2">
@@ -207,7 +208,9 @@ Attaching package: 'zoo'</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<hr>
+</section>
+<section id="as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." class="level2">
+<h2 class="anchored" data-anchor-id="as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen.">As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen.</h2>
 </section>
 <section id="the-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-model">The model</h2>
@@ -232,6 +235,15 @@ Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Aprigliano, V., Ardizzi, G., &amp; Monteforte, L. (2019), “Using Payment System Data to Forecast Economic Activity,” International Journal of Central Banking, International Journal of Central Banking, vol.&nbsp;15(4), pages 55-80, October.</p>
+<p>Baker, S. R., Bloom, N., &amp; Davis, S. J. (2016). Measuring Economic Policy Uncertainty. The Quarterly Journal of Economics, 131(4), 1593–1636. https://doi.org/10.1093/qje/qjw024</p>
+<p>Carlsen, M. &amp; Storgaard, P. E. (2010), “Dankort Payments as a Timely Indicator of Retail Sales in Denmark.” Danmarks Nationalbank Working Papers n°66.</p>
+<p>Ellingsen, J., Larsen, V. H., &amp; Thorsrud, L. A. (2021). News media versus FRED‐MD for macroeconomic forecasting. Journal of Applied Econometrics, 37(1), 63 – 81. https://doi.org/10.1002/jae.2859.</p>
+<p>Esteves, P. S. (2009), “Are ATM/POS Data Relevant When Nowcasting Private Consumption?”, Working Papers n°25, Banco de Portugal.</p>
+<p>Galbraith, J. W., &amp; Tkacz, G. (2013). Nowcasting GDP: Electronic Payments, Data Vintages and the Timing of Data Releases. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.2342228.</p>
+<p>Gil, M., Perez, J. J., Sanchez Fuentes, A. J., &amp; Urtasun, A. (2018). “Nowcasting Private Consumption: Traditional Indicators, Uncertainty Measures, Credit Cards and Some Internet Data”, Working Paper No.&nbsp;1842, Banco de Espana.</p>
+<p>Lazer, D., Kennedy, R., King, G., &amp; Vespignani, A. (2014). The Parable of Google Flu: Traps in Big Data Analysis. Science (New York, N.Y.), 343, 1203–1205. https://doi.org/10.1126/science.1248506</p>
+<p>Schmidt, T., &amp; Vosen, S. (2009). Forecasting Private Consumption: Survey-Based Indicators vs.&nbsp;Google Trends. Journal of Forecasting, 30. https://doi.org/10.2139/ssrn.1514369</p>
 <p>``` ## References {.unnumbered}</p>
 
 
