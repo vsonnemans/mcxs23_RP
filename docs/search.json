@@ -2,8 +2,78 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "My Research project",
+    "title": "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data",
     "section": "",
-    "text": "Abstract. This is a suggested formatting for your abstract. This quarto document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.\nKeywords. bsvars, impulse responses, quarto, R, tax shocks\n\n\nIntroduction\n``` ## References {.unnumbered}"
+    "text": "Abstract. This is a suggested formatting for your abstract. This quarto document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.\nKeywords. bsvars, impulse responses, quarto, R, tax shocks"
+  },
+  {
+    "objectID": "RP_1stdraft.html",
+    "href": "RP_1stdraft.html",
+    "title": "Research project",
+    "section": "",
+    "text": "##Question, objective and motivation\n\nObjective\n\n\nResearch question\n\n\nMotivation"
+  },
+  {
+    "objectID": "RP_1stdraft.html#data-and-their-properties",
+    "href": "RP_1stdraft.html#data-and-their-properties",
+    "title": "Forecasting personal consumption expenditures using Bayesian VARs and alternative data",
+    "section": "Data and their properties",
+    "text": "Data and their properties\nTo forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.\nThe traditional variables included in this analysis were collected from the readrba package and will be: * Personal Consumption expenditure * Real personal income * Interest rates on three-month treasury bills * Stock prices * Consumer sentiment indicator\nIncorporating traditional economic variables along new data sources in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic and frequent assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption."
+  },
+  {
+    "objectID": "draft2.html#data-and-their-properties",
+    "href": "draft2.html#data-and-their-properties",
+    "title": "Forecasting personal consumption expenditures with Bayesian VAR and alternative data",
+    "section": "Data and their properties",
+    "text": "Data and their properties\nTo forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.\nThe traditional variables included in this analysis were collected from the readrba package and will be:\n\nPersonal Consumption expenditure\nReal personal income\nInterest rates on three-month treasury bills\nStock prices\nConsumer sentiment indicator\n\nIncorporating traditional economic variables along new data sources in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic and frequent assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption."
+  },
+  {
+    "objectID": "draft2.html#the-model",
+    "href": "draft2.html#the-model",
+    "title": "Forecasting personal consumption expenditures using Bayesian VARs and alternative data",
+    "section": "The model",
+    "text": "The model\nThe model used for the forecasting experiment is a VAR(p) model:\n\\[\n\\begin{aligned}\ny_t & =\\mu_0+A_1 y_{t-1}+\\cdots+A_p y_{t-p}+\\epsilon_t \\\\\\epsilon_t \\mid Y_{t-1} & \\sim i i d \\mathcal{N}_N\\left(\\mathbf{0}_N, \\Sigma\\right)\n\\end{aligned}\n\\]\nWhere \\(N=6\\) and \\(y_t\\) is the vector of 6 variables:\n\\[\ny_t=\\left(\\begin{array}{cc}\\operatorname{PCE}_t & =\\text { PCE } \\\\\\operatorname{GT}_t & =\\text { Google Trends index } \\\\\\operatorname{totaltax}_t & =\\text { tax revenue } \\\\\\text { nontax }_t & =\\text { non-tax revenue } \\\\\\text { pubinv }_t & =\\text { government gross fixed capital formation } \\\\\\text { pubtrans }_t & =\\text { social assitance and benefits payments } \\\\\\text { pubcons }_t & =\\text { government final consumption } \\\\\\text { cashrate }_t & =\\text { cash rate target } \\\\\\text { Ma }_t & =\\text { M3 money supply }\n\\end{array}\\right)\n\\]\nThe model can also be written in matrix notation:\n\\[\n\\begin{aligned}\nY & =X A+E \\\\E \\mid X & \\sim \\mathcal{M N} _{T \\times N}\\left(\\mathbf{0}_{T \\times N}, \\Sigma, I_T\\right)\n\\end{aligned}\n\\]\nWhere \\(Y\\) is a \\(T\\times6\\) matrix, \\(X\\) is a \\(T\\times(1+(6\\times p))\\), \\(A\\) is a \\((1+(6\\times p))\\times 6\\) matrix that contains the relationships between the variables and \\(E\\) is a \\(T\\times6\\). T and p are yet to be determined during the continuation of this research project."
+  },
+  {
+    "objectID": "draft2.html#the-data-and-their-properties",
+    "href": "draft2.html#the-data-and-their-properties",
+    "title": "Forecasting personal consumption expenditures using Bayesian VARs and alternative data",
+    "section": "The data and their properties",
+    "text": "The data and their properties\nTo forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.\nThe traditional variables included in this analysis were collected from the readrba package and will be:\n\nHousehold final consumption expenditure\nReal household disposable income\nInterest rates on three-month treasury bills\nConsumer sentiment indicator\n\nIncorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption."
+  },
+  {
+    "objectID": "draft2.html#references",
+    "href": "draft2.html#references",
+    "title": "Forecasting personal consumption expenditures using Bayesian VARs and alternative data",
+    "section": "References",
+    "text": "References"
+  },
+  {
+    "objectID": "index.html#the-question-objective-and-motivation",
+    "href": "index.html#the-question-objective-and-motivation",
+    "title": "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data",
+    "section": "The question, objective and motivation",
+    "text": "The question, objective and motivation\n\nObjective\n\n\nResearch question\n\n\nMotivation"
+  },
+  {
+    "objectID": "index.html#the-data-and-their-properties",
+    "href": "index.html#the-data-and-their-properties",
+    "title": "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data",
+    "section": "The data and their properties",
+    "text": "The data and their properties\nTo forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.\nThe traditional variables included in this analysis were collected from the readrba package and will be:\n\nHousehold final consumption expenditure\nReal household disposable income\nInterest rates on three-month treasury bills\nConsumer sentiment indicator\n\nIncorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption."
+  },
+  {
+    "objectID": "index.html#the-model",
+    "href": "index.html#the-model",
+    "title": "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data",
+    "section": "The model",
+    "text": "The model\nThe model used for the forecasting experiment is a VAR(p) model:\n\\[\n\\begin{aligned}\ny_t & =\\mu_0+A_1 y_{t-1}+\\cdots+A_p y_{t-p}+\\epsilon_t \\\\\\epsilon_t \\mid Y_{t-1} & \\sim i i d \\mathcal{N}_N\\left(\\mathbf{0}_N, \\Sigma\\right)\n\\end{aligned}\n\\]\nWhere \\(N=6\\) and \\(y_t\\) is the vector of 6 variables:\n\\[\ny_t=\\left(\\begin{array}{cc}\\operatorname{PCE}_t & =\\text { PCE } \\\\\\operatorname{GT}_t & =\\text { Google Trends index } \\\\\\operatorname{totaltax}_t & =\\text { tax revenue } \\\\\\text { nontax }_t & =\\text { non-tax revenue } \\\\\\text { pubinv }_t & =\\text { government gross fixed capital formation } \\\\\\text { pubtrans }_t & =\\text { social assitance and benefits payments } \\\\\\text { pubcons }_t & =\\text { government final consumption } \\\\\\text { cashrate }_t & =\\text { cash rate target } \\\\\\text { Ma }_t & =\\text { M3 money supply }\n\\end{array}\\right)\n\\]\nThe model can also be written in matrix notation:\n\\[\n\\begin{aligned}\nY & =X A+E \\\\E \\mid X & \\sim \\mathcal{M N} _{T \\times N}\\left(\\mathbf{0}_{T \\times N}, \\Sigma, I_T\\right)\n\\end{aligned}\n\\]\nWhere \\(Y\\) is a \\(T\\times6\\) matrix, \\(X\\) is a \\(T\\times(1+(6\\times p))\\), \\(A\\) is a \\((1+(6\\times p))\\times 6\\) matrix that contains the relationships between the variables and \\(E\\) is a \\(T\\times6\\). T and p are yet to be determined during the continuation of this research project."
+  },
+  {
+    "objectID": "index.html#references",
+    "href": "index.html#references",
+    "title": "Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data",
+    "section": "References",
+    "text": "References\n``` ## References {.unnumbered}"
   }
 ]

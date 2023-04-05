@@ -8,7 +8,7 @@
 
 <meta name="author" content="Victoria Sonnemans">
 
-<title>Macroeconometrics Research Report - Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data</title>
+<title>Macroeconometrics Research Report - Forecasting personal consumption expenditures using Bayesian VARs and alternative data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,8 +60,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -92,15 +90,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link active" data-scroll-target="#the-question-objective-and-motivation">The question, objective and motivation</a>
+  <li><a href="#question-objective-and-motivation" id="toc-question-objective-and-motivation" class="nav-link active" data-scroll-target="#question-objective-and-motivation">Question, objective and motivation</a>
   <ul class="collapse">
   <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">Objective</a></li>
   <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">Research question</a></li>
   <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
   </ul></li>
-  <li><a href="#the-data-and-their-properties" id="toc-the-data-and-their-properties" class="nav-link" data-scroll-target="#the-data-and-their-properties">The data and their properties</a></li>
-  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">Data and their properties</a></li>
   </ul>
 </nav>
     </div>
@@ -109,7 +105,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Forecasting Personal Consumption Expenditures using Bayesian VARs and alternative data</h1>
+<h1 class="title">Forecasting personal consumption expenditures using Bayesian VARs and alternative data</h1>
 </div>
 
 
@@ -130,12 +126,8 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<blockquote class="blockquote">
-<p><strong>Abstract.</strong> This is a suggested formatting for your abstract. This <strong>quarto</strong> document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.</p>
-<p><strong>Keywords.</strong> bsvars, impulse responses, quarto, R, tax shocks</p>
-</blockquote>
-<section id="the-question-objective-and-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="the-question-objective-and-motivation">The question, objective and motivation</h2>
+<section id="question-objective-and-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="question-objective-and-motivation">Question, objective and motivation</h2>
 <section id="objective" class="level3">
 <h3 class="anchored" data-anchor-id="objective">Objective</h3>
 </section>
@@ -146,43 +138,11 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
 </section>
 </section>
-<section id="the-data-and-their-properties" class="level2">
-<h2 class="anchored" data-anchor-id="the-data-and-their-properties">The data and their properties</h2>
+<section id="data-and-their-properties" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-their-properties">Data and their properties</h2>
 <p>To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.</p>
-<p>The traditional variables included in this analysis were collected from the readrba package and will be:</p>
-<ul>
-<li><p>Household final consumption expenditure</p></li>
-<li><p>Real household disposable income</p></li>
-<li><p>Interest rates on three-month treasury bills</p></li>
-<li><p>Consumer sentiment indicator</p></li>
-</ul>
-<p>Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption.</p>
-<hr>
-</section>
-<section id="the-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-model">The model</h2>
-<p>The model used for the forecasting experiment is a VAR(p) model:</p>
-<p><span class="math display">\[
-\begin{aligned}
-y_t &amp; =\mu_0+A_1 y_{t-1}+\cdots+A_p y_{t-p}+\epsilon_t \\\epsilon_t \mid Y_{t-1} &amp; \sim i i d \mathcal{N}_N\left(\mathbf{0}_N, \Sigma\right)
-\end{aligned}
-\]</span></p>
-<p>Where <span class="math inline">\(N=6\)</span> and <span class="math inline">\(y_t\)</span> is the vector of 6 variables:</p>
-<p><span class="math display">\[
-y_t=\left(\begin{array}{cc}\operatorname{PCE}_t &amp; =\text { PCE } \\\operatorname{GT}_t &amp; =\text { Google Trends index } \\\operatorname{totaltax}_t &amp; =\text { tax revenue } \\\text { nontax }_t &amp; =\text { non-tax revenue } \\\text { pubinv }_t &amp; =\text { government gross fixed capital formation } \\\text { pubtrans }_t &amp; =\text { social assitance and benefits payments } \\\text { pubcons }_t &amp; =\text { government final consumption } \\\text { cashrate }_t &amp; =\text { cash rate target } \\\text { Ma }_t &amp; =\text { M3 money supply }
-\end{array}\right)
-\]</span></p>
-<p>The model can also be written in matrix notation:</p>
-<p><span class="math display">\[
-\begin{aligned}
-Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}_{T \times N}, \Sigma, I_T\right)
-\end{aligned}
-\]</span></p>
-<p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times6\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(6\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(6\times p))\times 6\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times6\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<p>``` ## References {.unnumbered}</p>
+<p>The traditional variables included in this analysis were collected from the readrba package and will be: * Personal Consumption expenditure * Real personal income * Interest rates on three-month treasury bills * Stock prices * Consumer sentiment indicator</p>
+<p>Incorporating traditional economic variables along new data sources in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic and frequent assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption.</p>
 
 
 </section>

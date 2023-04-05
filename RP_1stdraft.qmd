@@ -1,0 +1,28 @@
+---
+title: "Forecasting personal consumption expenditures using Bayesian VARs and alternative data"
+author: "Victoria Sonnemans"
+format: html
+---
+
+## Question, objective and motivation
+
+### Objective
+
+### Research question
+
+### Motivation
+
+## Data and their properties
+To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables. 
+
+The traditional variables included in this analysis were collected from the readrba package and will be:
+* Personal Consumption expenditure
+* Real personal income
+* Interest rates on three-month treasury bills
+* Stock prices
+* Consumer sentiment indicator
+
+Incorporating traditional economic variables along new data sources in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic and frequent assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, VIX is added to control for the fluctuations in consumption due to movements in the stock market. The market rate of treasury bills controls for the monetary policy effect on consumption. Lastly, disposable income is included for the income effect on consumption. 
+
+
+
