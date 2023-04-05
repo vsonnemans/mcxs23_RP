@@ -14,11 +14,15 @@ bibliography: references.bib
 
 ## The question, objective and motivation
 
-### Objective
-
 ### Research question
+Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in Australia? Which combination of traditional and alternative data provides the highest accuracy in the latter indicator? 
 
-### Motivation
+### Objective and Motivation
+As it drives around 50% of the Australian GDP, Household Final Consumption Expenditures (PCE) is a leading indicator to gauge the economic health of a country. There is thus a high incentive to improve the accuracy of its predictions. This has encouraged researchers to investigate big data as alternative sources. For instance, Schimdt and Vosen (2011) use search query time-series provided by Google Trends to forecast consumption. Esteves (2009), Aprigliano, et al. (2019), Galbraith and Tkacz (2013), Carlsen and Storgaard (2010) analyze electronic payments to predict consumption as these can track a large percentage of spending activities. Ellingsen, et al. (2021) demonstrate that news media data capture information about consumption that hard economic indicators do not. Gil et al. (2018) investigate the potential of the Economic Policy Uncertainty index derived from news data and developed by Baker et al. (2016) to predict consumption.
+
+Despite the recognized superiority of Bayesian VARs in macroeconomic predictions, there is nearly no research on the combination of Bayesian VARs and alternative data. Existing articles either investigate the use of Bayesian estimation models or of alternative data to forecast indicators but do not consider both together. 
+
+This paper will compare the forecasts of PCE in Australia from Bayesian VARs and several extensions applied on different sets of variables. These datasets will include both traditional macroeconomic variables computed by statistical offices and alternative data such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE. 
 
 ## The data and their properties
 
@@ -117,6 +121,25 @@ $$
 Where $Y$ is a $T\times6$ matrix, $X$ is a $T\times(1+(6\times p))$, $A$ is a $(1+(6\times p))\times 6$ matrix that contains the relationships between the variables and $E$ is a $T\times6$. T and p are yet to be determined during the continuation of this research project.
 
 ## References
+Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
+
+Baker, S. R., Bloom, N., & Davis, S. J. (2016). Measuring Economic Policy Uncertainty. The Quarterly Journal of Economics, 131(4), 1593–1636. https://doi.org/10.1093/qje/qjw024
+
+Carlsen, M. & Storgaard, P. E. (2010), "Dankort Payments as a Timely Indicator of Retail Sales in Denmark." Danmarks Nationalbank Working Papers n°66.
+
+Ellingsen, J., Larsen, V. H., & Thorsrud, L. A. (2021). News media versus FRED‐MD for macroeconomic forecasting. Journal of Applied Econometrics, 37(1), 63 – 81.
+https://doi.org/10.1002/jae.2859.
+
+Esteves, P. S. (2009), "Are ATM/POS Data Relevant When Nowcasting Private
+Consumption?", Working Papers n°25, Banco de Portugal.
+
+Galbraith, J. W., & Tkacz, G. (2013). Nowcasting GDP: Electronic Payments, Data Vintages and the Timing of Data Releases. SSRN Electronic Journal. https://doi.org/10.2139/ssrn.2342228.
+
+Gil, M., Perez, J. J., Sanchez Fuentes, A. J., & Urtasun, A. (2018). "Nowcasting Private Consumption: Traditional Indicators, Uncertainty Measures, Credit Cards and Some Internet Data", Working Paper No. 1842, Banco de Espana.
+
+Lazer, D., Kennedy, R., King, G., & Vespignani, A. (2014). The Parable of Google Flu: Traps in Big Data Analysis. Science (New York, N.Y.), 343, 1203–1205. https://doi.org/10.1126/science.1248506
+
+Schmidt, T., & Vosen, S. (2009). Forecasting Private Consumption: Survey-Based Indicators vs. Google Trends. Journal of Forecasting, 30. https://doi.org/10.2139/ssrn.1514369
 
 
 
