@@ -98,7 +98,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#objective-and-motivation" id="toc-objective-and-motivation" class="nav-link" data-scroll-target="#objective-and-motivation">Objective and Motivation</a></li>
   </ul></li>
   <li><a href="#the-data-and-their-properties" id="toc-the-data-and-their-properties" class="nav-link" data-scroll-target="#the-data-and-their-properties">The data and their properties</a></li>
-  <li><a href="#as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." id="toc-as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." class="nav-link" data-scroll-target="#as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen.">As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen.</a></li>
   <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -208,9 +207,8 @@ Attaching package: 'zoo'</code></pre>
 <p><img src="index_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen." class="level2">
-<h2 class="anchored" data-anchor-id="as-for-the-alternative-data-a-google-trends-index-will-be-included.-google-trends-is-a-tool-which-reveals-how-frequently-a-certain-keyword-has-been-searched-for-on-the-google-web-browser.-the-platform-provides-weekly-aggregated-time-series-starting-in-2004-for-a-specific-keyword-that-can-be-directly-downloaded-using-the-r-package-gtrendsr.-the-google-trends-index-will-be-constructed-based-on-the-methodology-presented-in-schmidt-and-vosen-2009.-however-we-will-adapt-their-approach-to-match-australian-specificities.-therefore-the-specific-keywords-to-construct-the-index-have-yet-to-be-chosen.">As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specificities. Therefore, the specific keywords to construct the index have yet to be chosen.</h2>
+<hr>
+<p>As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen.</p>
 </section>
 <section id="the-model" class="level2">
 <h2 class="anchored" data-anchor-id="the-model">The model</h2>
@@ -220,9 +218,9 @@ Attaching package: 'zoo'</code></pre>
 y_t &amp; =\mu_0+A_1 y_{t-1}+\cdots+A_p y_{t-p}+\epsilon_t \\\epsilon_t \mid Y_{t-1} &amp; \sim i i d \mathcal{N}_N\left(\mathbf{0}_N, \Sigma\right)
 \end{aligned}
 \]</span></p>
-<p>Where <span class="math inline">\(N=6\)</span> and <span class="math inline">\(y_t\)</span> is the vector of 6 variables:</p>
+<p>Where <span class="math inline">\(N=5\)</span> and <span class="math inline">\(y_t\)</span> is the vector of 6 variables:</p>
 <p><span class="math display">\[
-y_t=\left(\begin{array}{cc}\operatorname{PCE}_t &amp; =\text { PCE } \\\operatorname{GT}_t &amp; =\text { Google Trends index } \\\operatorname{totaltax}_t &amp; =\text { tax revenue } \\\text { nontax }_t &amp; =\text { non-tax revenue } \\\text { pubinv }_t &amp; =\text { government gross fixed capital formation } \\\text { pubtrans }_t &amp; =\text { social assitance and benefits payments } \\\text { pubcons }_t &amp; =\text { government final consumption } \\\text { cashrate }_t &amp; =\text { cash rate target } \\\text { Ma }_t &amp; =\text { M3 money supply }
+y_t=\left(\begin{array}{cc}\operatorname{pce}_t &amp; =\text { PCE } \\\operatorname{GT}_t &amp; =\text { Google Trends index } \\\operatorname{inc}_t &amp; =\text { Real household disposable income } \\\text { int }_t &amp; =\text { Interest rates on three-month treasury bills} \\\text { sent }_t &amp; =\text { Consumer sentiment indicator }
 \end{array}\right)
 \]</span></p>
 <p>The model can also be written in matrix notation:</p>
@@ -231,7 +229,7 @@ y_t=\left(\begin{array}{cc}\operatorname{PCE}_t &amp; =\text { PCE } \\\operator
 Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}_{T \times N}, \Sigma, I_T\right)
 \end{aligned}
 \]</span></p>
-<p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times6\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(6\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(6\times p))\times 6\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times6\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
+<p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times5\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(5\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(5\times p))\times 5\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times5\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -244,7 +242,6 @@ Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}
 <p>Gil, M., Perez, J. J., Sanchez Fuentes, A. J., &amp; Urtasun, A. (2018). “Nowcasting Private Consumption: Traditional Indicators, Uncertainty Measures, Credit Cards and Some Internet Data”, Working Paper No.&nbsp;1842, Banco de Espana.</p>
 <p>Lazer, D., Kennedy, R., King, G., &amp; Vespignani, A. (2014). The Parable of Google Flu: Traps in Big Data Analysis. Science (New York, N.Y.), 343, 1203–1205. https://doi.org/10.1126/science.1248506</p>
 <p>Schmidt, T., &amp; Vosen, S. (2009). Forecasting Private Consumption: Survey-Based Indicators vs.&nbsp;Google Trends. Journal of Forecasting, 30. https://doi.org/10.2139/ssrn.1514369</p>
-<p>``` ## References {.unnumbered}</p>
 
 
 </section>
