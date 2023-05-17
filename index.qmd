@@ -129,12 +129,84 @@ $$
 
 Where $Y$ is a $T\times5$ matrix, $X$ is a $T\times(1+(5\times p))$, $A$ is a $(1+(5\times p))\times 5$ matrix that contains the relationships between the variables and $E$ is a $T\times5$. T and p are yet to be determined during the continuation of this research project.
 
-In the continuation of this research project, we will make assumptions on the priors distribution and a possible extension of this model could be to check if other priors could lead to better results. Moreover, we will estimate the matrix A to understand the relationship between those variables. The objective will be to identify whether alternative data can improve the forecast accuracy of PCE.
+#####The Likelihood function
 
-####The Derivations of the posterior distribution
+$$
+\begin{aligned}
+Y \mid X,A,\Sigma & \sim \mathcal{M N} _{T \times N}\left(XA, \Sigma, I_T\right)
+\end{aligned}
+$$
+$$
+\begin{aligned}
 
+L(A, \Sigma \mid Y, X) & \propto det(\Sigma)^{-\frac{T}{2}} \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X A)^{\prime}(Y-X A)\right]\right\} \\
+&= det (\Sigma)^{-\frac{T}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\}
 
-####The Code for Bayesian VAR estimation
+\end{aligned}
+$$
+####The prior distributions
+$$
+\begin{aligned}
+A \mid \Sigma \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \underline{V}) \\
+\end{aligned} 
+\\
+\begin{aligned}
+\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{aligned}
+$$
+$$
+\begin{aligned}
+
+p(A, \Sigma) \propto & \operatorname{det}(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\}
+
+\end{aligned}
+$$
+In the code, we set:
+A as 
+V as
+S as 
+Nu as 
+
+####The posterior distribution
+#####The Derivations of the posterior distribution
+$$
+p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma)p(\Sigma)
+$$
+Let's focus on the kernel
+
+$$
+\begin{aligned}
+p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
+& \times det(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\} \\
+
+& = \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 } 
+
+\color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
+&\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
+
+\end{aligned}
+$$
+We can now complete the squares for the green part of the equation.
+$$
+\begin{aligned}
+\color{blue}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})}
+\color{green}{
++(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})}
+\color{red}{
++(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})}
++\underline{S}
+\end{aligned}
+$$
+#####The Code for Bayesian VAR estimation
 
 ## References
 
