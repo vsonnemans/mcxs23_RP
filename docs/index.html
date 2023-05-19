@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -200,7 +234,11 @@ L(A, \Sigma \mid Y, X) &amp; \propto det(\Sigma)^{-\frac{T}{2}} \exp \left\{-\fr
 &amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
 &amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\}
 \end{aligned}
-\]</span> #### The prior distributions <span class="math display">\[
+\]</span></p>
+</section>
+<section id="the-prior-distributions" class="level4">
+<h4 class="anchored" data-anchor-id="the-prior-distributions">The prior distributions</h4>
+<p><span class="math display">\[
 \begin{aligned}
 &amp;A \mid \Sigma \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \underline{V}) \\
 &amp;\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
@@ -221,8 +259,8 @@ p(A, \Sigma) \propto &amp; \operatorname{det}(\Sigma)^{-\frac{N+K+\underline{\nu
 \begin{aligned}
 p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma)p(\Sigma)
 \end{aligned}
-\]</span> Let’s focus on the kernel</p>
-$$
+\]</span></p>
+Let’s focus on the kernel $$
 <span class="math display">\[\begin{aligned}
 p(A,\Sigma \mid Y,X) \propto &amp; det (\Sigma)^{-\frac{T}{2}} \\
 &amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
@@ -237,9 +275,8 @@ p(A,\Sigma \mid Y,X) \propto &amp; det (\Sigma)^{-\frac{T}{2}} \\
 \color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
 &amp;\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
 \end{aligned}\]</span>
-<span class="math display">\[
-We can now complete the squares for the green part of the equation.
-\]</span>
+<p>$$ We can now complete the squares for the green part of the equation.</p>
+$$
 <span class="math display">\[\begin{aligned}
 &amp;
 \color{blue}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})}
@@ -258,23 +295,27 @@ We can now complete the squares for the green part of the equation.
 &amp; = A^\prime (X^\prime X+ \underline{V}^{-1})A -2A^\prime (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}\]</span>
 <p>$$</p>
-<p>We can set <span class="math inline">\(\overline{V}^{-1} =X^\prime X+ \underline{V}^{-1}\)</span> <span class="math display">\[
+<p>We can set $ <sup>{-1}=X</sup>X+ ^{-1}$</p>
+<p><span class="math display">\[
 \begin{aligned}
 &amp; = A^\prime \color{green}{\overline{V}^{-1}}A -2A^\prime \color{green}{\overline{V}^{-1}\overline{V}} (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}
-\]</span> We can set <span class="math inline">\(\overline{A} = \overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})\)</span></p>
+\]</span></p>
+<p>We can set $ =(X<sup>Y+</sup>{-1})$</p>
 <p><span class="math display">\[
 \begin{aligned}
 &amp; = A^\prime \overline{V}^{-1}A -2A^\prime \overline{V}^{-1}\overline{A} \pm \overline{A}^\prime \overline{V}^{-1}\overline{A} + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}\\
 &amp; =(A-\overline{A})^\prime \overline{V}^{-1}(A-\overline{A})-\overline{A}^\prime \overline{V}^{-1}\overline{A}+Y^\prime Y+\underline{S}+\underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}
-\]</span> Let’s put the latter expression back in the <span class="math inline">\(exp\)</span>.</p>
+\]</span></p>
+<p>Let’s put the latter expression back in the <span class="math inline">\(exp\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned}
 \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\overline{A})^{\prime} \overline{V}^{-1}(A-\overline{A})\right]\right\}\exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}\overline{S}}
 \end{aligned}
 \]</span> <span class="math display">\[
-\begin{aligned}
+\boxed{
+\begin{array}{rcl}
 &amp;p(A,\Sigma \mid Y,X)= p(A \mid Y,X,\Sigma)p(\Sigma \mid Y,X) \\
 &amp;p(A \mid Y,X,\Sigma)=\mathcal{M N}_{K\times N}(\overline{A},\Sigma,\overline{V})\\
 &amp;p(\Sigma \mid Y,X)=\mathcal{I W}_N (\overline{S},\overline{\nu})\\
@@ -282,31 +323,214 @@ We can now complete the squares for the green part of the equation.
 &amp; \overline{A}=\overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})\\
 &amp; \overline{\nu}=T+\underline{\nu}\\
 &amp; \overline{S}=\underline{S}+Y^\prime Y+\underline{A}^\prime \underline{V}^{-1}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
-\end{aligned}
-\]</span> ##### The Code for Bayesian VAR estimation</p>
+\end{array}
+}
+\]</span></p>
+</section>
+<section id="the-code-for-bayesian-var-estimation" class="level5">
+<h5 class="anchored" data-anchor-id="the-code-for-bayesian-var-estimation">The Code for Bayesian VAR estimation</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayesian estimation of the baseline model</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the setup</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">4</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Create Y and X matrices</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>y       <span class="ot">=</span> <span class="fu">ts</span>(Y.df[,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)], <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2010</span>,<span class="dv">1</span>), <span class="at">frequency=</span><span class="dv">4</span>, <span class="at">names=</span><span class="fu">c</span>(<span class="st">"pce"</span>,<span class="st">"inc"</span>,<span class="st">"cpi"</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Y       <span class="ot">=</span> <span class="fu">ts</span>(y[<span class="dv">5</span><span class="sc">:</span><span class="fu">nrow</span>(y),], <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2011</span>,<span class="dv">1</span>), <span class="at">frequency=</span><span class="dv">4</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>X       <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(Y),<span class="dv">1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p){</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  X     <span class="ot">=</span> <span class="fu">cbind</span>(X,y[<span class="dv">5</span><span class="sc">:</span><span class="fu">nrow</span>(y)<span class="sc">-</span>i,])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">## MLE</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>A.hat       <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>X)<span class="sc">%*%</span><span class="fu">t</span>(X)<span class="sc">%*%</span>Y</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Sigma.hat   <span class="ot">=</span> <span class="fu">t</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">%*%</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">/</span>T</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the priors (Minnesota prior)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>kappa<span class="fl">.1</span>           <span class="ot">=</span> <span class="fl">0.02</span><span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>kappa<span class="fl">.2</span>           <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>A.prior           <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="fu">nrow</span>(A.hat),<span class="fu">ncol</span>(A.hat))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>A.prior[<span class="dv">2</span><span class="sc">:</span>(N<span class="sc">+</span><span class="dv">1</span>),] <span class="ot">=</span> <span class="fu">diag</span>(N)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>priors <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">A.prior     =</span> A.prior,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">V.prior     =</span> <span class="fu">diag</span>(<span class="fu">c</span>(kappa<span class="fl">.2</span>,kappa<span class="fl">.1</span><span class="sc">*</span>((<span class="dv">1</span><span class="sc">:</span>p)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">2</span>))<span class="sc">%x%</span><span class="fu">rep</span>(<span class="dv">1</span>,N))),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">S.prior     =</span> <span class="fu">diag</span>(<span class="fu">diag</span>(Sigma.hat)),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">nu.prior    =</span> N<span class="sc">+</span><span class="dv">1</span> </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="do">## BVAR function</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>BVAR <span class="ot">=</span> <span class="cf">function</span>(Y,X,priors,S){</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># normal-inverse Wishard posterior parameters</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  V.bar.inv   <span class="ot">=</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(priors<span class="sc">$</span>V.prior))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  V.bar       <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  A.bar       <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(priors<span class="sc">$</span>V.prior))<span class="sc">%*%</span>priors<span class="sc">$</span>A.prior)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  nu.bar      <span class="ot">=</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> priors<span class="sc">$</span>nu.prior</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  S.bar       <span class="ot">=</span> priors<span class="sc">$</span>S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>(priors<span class="sc">$</span>A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(priors<span class="sc">$</span>V.prior))<span class="sc">%*%</span>priors<span class="sc">$</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  S.bar.inv   <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># posterior draws</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">=</span> <span class="fu">rWishart</span>(<span class="fu">sum</span>(S), <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">=</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,<span class="fu">sum</span>(S)))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  A.posterior       <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),<span class="fu">sum</span>(S)))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),<span class="fu">sum</span>(S)))</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  L                 <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">sum</span>(S)){</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s] <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span><span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  posterior <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sigma.posterior   =</span> Sigma.posterior[,,<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span>S[<span class="dv">1</span>])], <span class="co">#getting rid of first S[1] draws</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">A.posterior       =</span> A.posterior[,,<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span>S[<span class="dv">1</span>])]</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(posterior)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="do">## Apply function BVAR</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>S               <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">500</span>,<span class="dv">50000</span>)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>posterior.draws <span class="ot">=</span> <span class="fu">BVAR</span>(<span class="at">Y=</span>Y, <span class="at">X=</span>X, <span class="at">priors=</span>priors, <span class="at">S=</span>S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output of the BVAR function applied on the baseline model is:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">apply</span>(posterior.draws<span class="sc">$</span>A.posterior, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, mean),<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]     [,2]   [,3]
+ [1,] 14801.426 4243.513 -0.286
+ [2,]     0.801   -0.455  0.000
+ [3,]     0.557    0.393  0.000
+ [4,]    18.254  -16.970  1.005
+ [5,]     0.029    0.386  0.000
+ [6,]    -0.341    0.757  0.000
+ [7,]     3.590   -2.664  0.001
+ [8,]    -0.209    0.107  0.000
+ [9,]    -0.267   -0.198  0.000
+[10,]     1.202   -1.026  0.000
+[11,]     0.116   -0.001  0.000
+[12,]     0.214    0.021  0.000
+[13,]     0.916   -0.292  0.000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">apply</span>(posterior.draws<span class="sc">$</span>Sigma.posterior, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, mean),<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              [,1]          [,2]      [,3]
+[1,]  65622268.627 -11397940.991  2475.928
+[2,] -11397940.991  18917721.220 -1019.367
+[3,]      2475.928     -1019.367     0.686</code></pre>
+</div>
+</div>
 </section>
 </section>
 </section>
+</section>
+<section id="the-extended-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-extended-model">The extended model</h2>
 <section id="the-extension-of-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="the-extension-of-the-model">The extension of the model</h3>
-<p>Explanations on the extension #### The prior distribution <span class="math display">\[
-\begin{aligned}
-A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
-\end{aligned}
-\\
-\begin{aligned}
-\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}
-\end{aligned}\\
-\begin{aligned}
-\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
-\end{aligned}
-\]</span> #### The posterior distribution In this section, we will derive the full-conditional posterior distribution of <span class="math inline">\(\kappa\)</span> and the joint full-conditional posterior distribution of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>.</p>
+<section id="the-prior-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="the-prior-distribution">The prior distribution</h4>
+<p><span class="math display">\[
+\begin{array}{rcl}
+&amp;A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
+&amp;\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}\\
+&amp;\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{array}
+\]</span></p>
+</section>
+<section id="the-posterior-distribution-1" class="level4">
+<h4 class="anchored" data-anchor-id="the-posterior-distribution-1">The posterior distribution</h4>
+<p>In this section, we will derive the the joint full-conditional posterior distribution of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span> and the full-conditional posterior distribution of <span class="math inline">\(\kappa\)</span>.</p>
+<section id="the-derivations-of-the-joint-full-conditional-posterior-distribution-of-a-and-sigma" class="level5">
+<h5 class="anchored" data-anchor-id="the-derivations-of-the-joint-full-conditional-posterior-distribution-of-a-and-sigma">The derivations of the joint full-conditional posterior distribution of A and Sigma</h5>
 <p><span class="math display">\[
 \begin{aligned}
 p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma,\color{red}{\kappa})p(\Sigma)p(\color{red}{\kappa})
 \end{aligned}
 \]</span> Let’s focus on the kernel</p>
+$$
+<span class="math display">\[\begin{aligned}
+p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto &amp; det (\Sigma)^{-\frac{T}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
+&amp; \times det(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\}\\
+
+&amp; = \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 }
+\color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \frac{1}{\kappa} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
+&amp;\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
+\end{aligned}\]</span>
+<p>$$</p>
+$$
+<span class="math display">\[\begin{aligned}
+&amp;
+(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})
++(A-\underline{A})^{\prime} \color{red}{\frac{1}{\kappa}}\underline{V}^{-1}(A-\underline{A})
++(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})
++\underline{S} \\
+
+&amp; =A^\prime X^\prime XA -A^\prime X^\prime X \widehat{A} - \widehat{A}^\prime X^\prime XA + \widehat{A}^\prime X^\prime X \widehat{A}
++A^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1}A - A^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A} - \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} A + \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}
++ Y^\prime Y-Y^\prime X \widehat{A} - \widehat{A}^\prime X^\prime Y + \widehat{A}^\prime X^\prime X \widehat{A}+ \underline{S}\\
+
+&amp; =A^\prime X^\prime XA -Y^\prime XA - \widehat{A}^\prime X^\prime XA
++A^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1}A - A^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A} - \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} A
++ Y^\prime Y+ \underline{S} + \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}\\
+&amp; = A^\prime (X^\prime X+ \color{red}{\frac{1}{\kappa}}\underline{V}^{-1})A -2A^\prime (X^\prime Y+\color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}
+\end{aligned}\]</span>
+<p>$$</p>
+<p><span class="math display">\[
+\boxed{
+\begin{array}{rcl}
+&amp;p(A,\Sigma \mid Y,X,\color{red}{\kappa})= \mathcal{MNIW}_{K\times N}(\overline{A},\overline{V},\overline{S},\overline{\nu}) \\
+&amp; \overline{V} = (X^\prime X + \color{red}{\frac{1}{\kappa}}\underline{V}^{-1})^{-1}\\
+&amp; \overline{A}=\overline{V}(X^\prime Y+\color{red}{\frac{1}{\kappa}}\underline{V}^{-1}\underline{A})\\
+&amp; \overline{\nu}=T+\underline{\nu}\\
+&amp; \overline{S}=\underline{S}+Y^\prime Y+\underline{A}^\prime \underline{V}^{-1}\color{red}{\frac{1}{\kappa}}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
+\end{array}
+}
+\]</span></p>
+<section id="the-derivations-of-the-full-conditional-posterior-distribution-of-kappa" class="level6">
+<h6 class="anchored" data-anchor-id="the-derivations-of-the-full-conditional-posterior-distribution-of-kappa">The Derivations of the full-conditional posterior distribution of <span class="math inline">\(\kappa\)</span></h6>
+<p>$$ <span class="math display">\[\begin{align}
+p(\kappa \mid A, \Sigma, Y,X) &amp; =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}_{\kappa}, \underline{\nu}_{\kappa})p(A,\Sigma)\\
+&amp; =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}_{\kappa}, \underline{\nu}_{\kappa})p(A\mid \Sigma)p(\Sigma)\\
+
+&amp;= (\kappa)^{-\frac{\underline{\nu}+2}{2}}\exp\left\{\frac{-1}{2}\frac{\underline{s}_{\kappa}}{\kappa}\right\} \\
+&amp; \times det(\kappa \underline{V})^{-\frac{N}{2}}
+\exp\left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \frac{1}{\kappa}\underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+
+&amp;= (\kappa)^{-\frac{\underline{\nu}+2}{2}}(\kappa)^{-\frac{KN}{2}}\kappa ^{-\frac{\underline{\nu}+KN+2}{2}}\times \exp\left\{\frac{-1}{2} \frac{1}{\kappa}(\underline{s}_{\kappa}+\operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right])\overline{s}_{\kappa}\right\}\\
+
+&amp;= \kappa ^{-\frac{\overbrace{\underline{\nu}+KN}^{\overline{\nu}_{\kappa}}+2}{2}}\times \exp\left\{\frac{-1}{2} \frac{1}{\kappa}\underbrace{(\underline{s}_{\kappa}+\operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right])}_{\overline{s}_{\kappa}}\right\}
+
+\end{align}\]</span> $$</p>
+<p>We obtain the following full-conditional posterior distribution of <span class="math inline">\(\kappa\)</span>:</p>
+<p><span class="math display">\[
+\boxed{
+\begin{array}{rcl}
+&amp;\kappa \sim \mathcal{IG2}(\overline{s}_{\kappa},\overline{\nu}_{\kappa})\\
+&amp; \overline{s}_{\kappa}=\underline{s}_{\kappa}+\operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\\
+&amp;\overline{\nu}_{\kappa}=\underline{\nu}+KN
+\end{array}
+}
+\]</span></p>
 </section>
+</section>
+</section>
+</section>
+<section id="the-code-for-bayesian-var-estimation-1" class="level3">
+<h3 class="anchored" data-anchor-id="the-code-for-bayesian-var-estimation-1">The code for Bayesian VAR estimation</h3>
+<p>Let’s adapt the BVAR function to the extended model.</p>
+</section>
+</section>
+<section id="the-model-proof" class="level2">
+<h2 class="anchored" data-anchor-id="the-model-proof">The model proof</h2>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>

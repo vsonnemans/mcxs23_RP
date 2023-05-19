@@ -67,7 +67,7 @@ library(RColorBrewer)
 
 #Our variables
 #Household final consumption expenditures 
-pce = na.omit(as.data.frame(read_rba(series_id = "GGDPECCVPSH")))  
+pce = na.omit(as.data.frame(readrba::read_rba(series_id = "GGDPECCVPSH")))  
 pce = pce[203:254,]
 pce$date = as.Date(as.character(pce$date),format="%Y-%m-%d")  
 
@@ -257,11 +257,11 @@ $$
 
 ##### The Code for Bayesian VAR estimation
 
-### The Code for Bayesian VAR estimation
 ```{r function based on basic model}
 #| echo: true
 #| message: false
 #| warning: false
+
 # Bayesian estimation of the baseline model
 
 ## Specify the setup
@@ -328,14 +328,14 @@ posterior.draws = BVAR(Y=Y, X=X, priors=priors, S=S)
 ```
 
 The output of the BVAR function applied on the baseline model is: 
-```{r function based on basic model}
+```{r ouptput}
 #| echo: true
 #| message: false
 #| warning: false
 round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 ```
 
-```{r function based on basic model}
+```{r output 2}
 #| echo: true
 #| message: false
 #| warning: false
@@ -348,17 +348,13 @@ round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
 
 #### The prior distribution
 $$
-\begin{aligned}
-A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
-\end{aligned} 
-\\
-\begin{aligned}
-\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}
-\end{aligned}\\
-\begin{aligned}
-\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
-\end{aligned}
+\begin{array}{rcl}
+&A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
+&\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}\\
+&\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{array}
 $$
+
 #### The posterior distribution
 In this section, we will derive the the joint full-conditional posterior distribution of $A$ and $\Sigma$ and the full-conditional posterior distribution of $\kappa$.
 
@@ -377,11 +373,10 @@ p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto & det (\Sigma)^{-\frac{T}{2}} \
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
 & \times det(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
-& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\}\\
 
 & = \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 } 
-
 \color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \frac{1}{\kappa} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
 &\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
 \end{aligned}
@@ -418,9 +413,10 @@ $$
 }
 $$
 
-######The Derivations of the full-conditional posterior distribution of $\kappa$
+###### The Derivations of the full-conditional posterior distribution of $\kappa$
+
 $$
-\begin{aligned}
+\begin{align}
 p(\kappa \mid A, \Sigma, Y,X) & =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}_{\kappa}, \underline{\nu}_{\kappa})p(A,\Sigma)\\
 & =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}_{\kappa}, \underline{\nu}_{\kappa})p(A\mid \Sigma)p(\Sigma)\\
 
@@ -432,7 +428,7 @@ p(\kappa \mid A, \Sigma, Y,X) & =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}
 
 &= \kappa ^{-\frac{\overbrace{\underline{\nu}+KN}^{\overline{\nu}_{\kappa}}+2}{2}}\times \exp\left\{\frac{-1}{2} \frac{1}{\kappa}\underbrace{(\underline{s}_{\kappa}+\operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right])}_{\overline{s}_{\kappa}}\right\}
 
-\end{aligned}
+\end{align}
 $$
 
 We obtain the following full-conditional posterior distribution of $\kappa$:
