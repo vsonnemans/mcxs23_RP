@@ -443,6 +443,7 @@ $$
 $$
 
 ### The code for Bayesian VAR estimation
+Let's adapt the BVAR function to the extended model. 
 
 ## The model proof
 
