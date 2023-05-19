@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.306">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -18,7 +18,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -60,6 +60,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
@@ -76,6 +77,8 @@ ul.task-list li input[type="checkbox"] {
     <span class="navbar-title">Macroeconometrics Research Report</span>
     </a>
   </div>
+        <div class="quarto-navbar-tools ms-auto">
+</div>
           <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -135,8 +138,8 @@ text-align: justify !important
 </section>
 <section id="objective-and-motivation" class="level3">
 <h3 class="anchored" data-anchor-id="objective-and-motivation">Objective and Motivation</h3>
-<p>As it drives around 50% of the Australian GDP, Household Final Consumption Expenditures (PCE) is a leading indicator to gauge the economic health of a country. There is thus a high incentive to improve the accuracy of its predictions. This has encouraged researchers to investigate big data as alternative sources. For instance, Schimdt and Vosen (2011) use search query time-series provided by Google Trends to forecast consumption. Esteves (2009), Aprigliano, et al.&nbsp;(2019), Galbraith and Tkacz (2013), Carlsen and Storgaard (2010) analyze electronic payments to predict consumption as these can track a large percentage of spending activities. Ellingsen, et al.&nbsp;(2021) demonstrate that news media data capture information about consumption that hard economic indicators do not. Gil et al.&nbsp;(2018) investigate the potential of the Economic Policy Uncertainty index derived from news data and developed by Baker et al.&nbsp;(2016) to predict consumption.</p>
-<p>Despite the recognized superiority of Bayesian VARs in macroeconomic predictions, there is nearly no research on the combination of Bayesian VARs and alternative data. Existing articles either investigate the use of Bayesian estimation models or of alternative data to forecast indicators but do not consider both together.</p>
+<p>As it drives around 50% of the Australian GDP, Household Final Consumption Expenditures (PCE) is a leading indicator to gauge the economic health of a country. There is thus a high incentive to improve the accuracy of its predictions. This has encouraged researchers to investigate big data as alternative sources. For instance, Schimdt and Vosen (2009) use search query time-series provided by Google Trends to forecast consumption. Esteves (2009), Aprigliano, et al.&nbsp;(2019), Galbraith and Tkacz (2013), Carlsen and Storgaard (2010) analyze electronic payments to predict consumption as these can track a large percentage of spending activities. Ellingsen, et al.&nbsp;(2021) demonstrate that news media data capture information about consumption that hard economic indicators do not. Gil et al.&nbsp;(2018) investigate the potential of the Economic Policy Uncertainty index derived from news data and developed by Baker et al.&nbsp;(2016) to predict consumption.</p>
+<p>According to Professor Tomasz Wozniak from the University of Melbourne, forecasting with Bayesian VARs often leads to more precise forecasts than when using the frequentist approach to forecasting because of the effect of the priors. Despite the benefits of Bayesian VARs, there is nearly no research on the combination of Bayesian VARs and alternative data. Existing articles either investigate the use of Bayesian estimation models or of alternative data to forecast indicators but do not consider both together.</p>
 <p>This paper will compare the forecasts of PCE in Australia from Bayesian VARs and several extensions applied on different sets of variables. These datasets will include both traditional macroeconomic variables computed by statistical offices and alternative data such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE.</p>
 </section>
 </section>
@@ -150,7 +153,7 @@ text-align: justify !important
 <li><p>Consumer sentiment indicator</p></li>
 <li><p>Consumer Price Index</p></li>
 </ul>
-<p>Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables.</p>
+<p>Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the “Big Data hubris” trap introduced by (Lazer et al., 2014). The “Big Data Hubris” is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, previous research have identified co-movements of most common consumer sentiment indicators and real PCE (Schimdt and Vosen, 2009).</p>
 <section id="figure-1.-time-series-plots-of-the-variables" class="level5" style="text-align: center;">
 <h5 style="text-align: center;" class="anchored" data-anchor-id="figure-1.-time-series-plots-of-the-variables">Figure 1. Time series plots of the variables</h5>
 <div class="cell">
@@ -162,8 +165,10 @@ text-align: justify !important
 <p>As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package “gtrendsR”. The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. Moreover, Google Trends have been quite extensively studied to forecast labor market indicators but only a few articles have focused on PCE.</p>
 </section>
 </section>
-<section id="the-model" class="level2">
-<h2 class="anchored" data-anchor-id="the-model">The model</h2>
+<section id="the-modelling-framework" class="level2">
+<h2 class="anchored" data-anchor-id="the-modelling-framework">The Modelling Framework</h2>
+<section id="the-baseline-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-baseline-model">The Baseline Model</h3>
 <p>The model used for the forecasting experiment is a VAR(p) model:</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -182,7 +187,126 @@ Y &amp; =X A+E \\E \mid X &amp; \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}
 \end{aligned}
 \]</span></p>
 <p>Where <span class="math inline">\(Y\)</span> is a <span class="math inline">\(T\times5\)</span> matrix, <span class="math inline">\(X\)</span> is a <span class="math inline">\(T\times(1+(5\times p))\)</span>, <span class="math inline">\(A\)</span> is a <span class="math inline">\((1+(5\times p))\times 5\)</span> matrix that contains the relationships between the variables and <span class="math inline">\(E\)</span> is a <span class="math inline">\(T\times5\)</span>. T and p are yet to be determined during the continuation of this research project.</p>
-<p>In the continuation of this research project, we will make assumptions on the priors distribution and a possible extension of this model could be to check if other priors could lead to better results. Moreover, we will estimate the matrix A to understand the relationship between those variables. The objective will be to identify whether alternative data can improve the forecast accuracy of PCE.</p>
+<section id="the-likelihood-function" class="level4">
+<h4 class="anchored" data-anchor-id="the-likelihood-function">The Likelihood function</h4>
+<p><span class="math display">\[
+\begin{aligned}
+Y \mid X,A,\Sigma &amp; \sim \mathcal{M N} _{T \times N}\left(XA, \Sigma, I_T\right)
+\end{aligned}
+\]</span> <span class="math display">\[
+\begin{aligned}
+L(A, \Sigma \mid Y, X) &amp; \propto det(\Sigma)^{-\frac{T}{2}} \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X A)^{\prime}(Y-X A)\right]\right\} \\
+&amp;= det (\Sigma)^{-\frac{T}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\}
+\end{aligned}
+\]</span> #### The prior distributions <span class="math display">\[
+\begin{aligned}
+&amp;A \mid \Sigma \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \underline{V}) \\
+&amp;\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{aligned}
+\]</span> <span class="math display">\[
+\begin{aligned}
+p(A, \Sigma) \propto &amp; \operatorname{det}(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\}
+\end{aligned}
+\]</span> In the code, we set: A as V as S as Nu as</p>
+</section>
+<section id="the-posterior-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="the-posterior-distribution">The posterior distribution</h4>
+<section id="the-derivations-of-the-posterior-distribution" class="level5">
+<h5 class="anchored" data-anchor-id="the-derivations-of-the-posterior-distribution">The Derivations of the posterior distribution</h5>
+<p><span class="math display">\[
+\begin{aligned}
+p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma)p(\Sigma)
+\end{aligned}
+\]</span> Let’s focus on the kernel</p>
+$$
+<span class="math display">\[\begin{aligned}
+p(A,\Sigma \mid Y,X) \propto &amp; det (\Sigma)^{-\frac{T}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
+&amp; \times det(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\} \\
+
+&amp; = \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
+&amp; \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 }
+
+\color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
+&amp;\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
+\end{aligned}\]</span>
+<span class="math display">\[
+We can now complete the squares for the green part of the equation.
+\]</span>
+<span class="math display">\[\begin{aligned}
+&amp;
+\color{blue}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})}
+\color{green}{
++(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})}
+\color{red}{
++(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})}
++\underline{S} \\
+
+&amp; \color{blue}{=A^\prime X^\prime XA -A^\prime X^\prime X \widehat{A} - \widehat{A}^\prime X^\prime XA + \widehat{A}^\prime X^\prime X \widehat{A}}
+\color{green}{ +A^\prime \underline{V}^{-1}A - A^\prime \underline{V}^{-1} \underline{A} - \underline{A}^\prime \underline{V}^{-1} A + \underline{A}^\prime \underline{V}^{-1} \underline{A}}
+\color{red}{+ Y^\prime Y-Y^\prime X \widehat{A} - \widehat{A}^\prime X^\prime Y + \widehat{A}^\prime X^\prime X \widehat{A}}+ \underline{S}\\
+&amp; \color{blue}{=A^\prime X^\prime XA -Y^\prime XA - \widehat{A}^\prime X^\prime XA}
+\color{green}{ +A^\prime \underline{V}^{-1}A - A^\prime \underline{V}^{-1} \underline{A} - \underline{A}^\prime \underline{V}^{-1} A}
+\color{red}{+ Y^\prime Y}+ \underline{S} \color{green}{+ \underline{A}^\prime \underline{V}^{-1} \underline{A}}\\
+&amp; = A^\prime (X^\prime X+ \underline{V}^{-1})A -2A^\prime (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
+\end{aligned}\]</span>
+<p>$$</p>
+<p>We can set <span class="math inline">\(\overline{V}^{-1} =X^\prime X+ \underline{V}^{-1}\)</span> <span class="math display">\[
+\begin{aligned}
+&amp; = A^\prime \color{green}{\overline{V}^{-1}}A -2A^\prime \color{green}{\overline{V}^{-1}\overline{V}} (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
+\end{aligned}
+\]</span> We can set <span class="math inline">\(\overline{A} = \overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; = A^\prime \overline{V}^{-1}A -2A^\prime \overline{V}^{-1}\overline{A} \pm \overline{A}^\prime \overline{V}^{-1}\overline{A} + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}\\
+&amp; =(A-\overline{A})^\prime \overline{V}^{-1}(A-\overline{A})-\overline{A}^\prime \overline{V}^{-1}\overline{A}+Y^\prime Y+\underline{S}+\underline{A}^\prime \underline{V}^{-1} \underline{A}
+\end{aligned}
+\]</span> Let’s put the latter expression back in the <span class="math inline">\(exp\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\overline{A})^{\prime} \overline{V}^{-1}(A-\overline{A})\right]\right\}\exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}\overline{S}}
+\end{aligned}
+\]</span> <span class="math display">\[
+\begin{aligned}
+&amp;p(A,\Sigma \mid Y,X)= p(A \mid Y,X,\Sigma)p(\Sigma \mid Y,X) \\
+&amp;p(A \mid Y,X,\Sigma)=\mathcal{M N}_{K\times N}(\overline{A},\Sigma,\overline{V})\\
+&amp;p(\Sigma \mid Y,X)=\mathcal{I W}_N (\overline{S},\overline{\nu})\\
+&amp; \overline{V} = (X^\prime X + \underline{V}^{-1})^{-1}\\
+&amp; \overline{A}=\overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})\\
+&amp; \overline{\nu}=T+\underline{\nu}\\
+&amp; \overline{S}=\underline{S}+Y^\prime Y+\underline{A}^\prime \underline{V}^{-1}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
+\end{aligned}
+\]</span> ##### The Code for Bayesian VAR estimation</p>
+</section>
+</section>
+</section>
+<section id="the-extension-of-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-extension-of-the-model">The extension of the model</h3>
+<p>Explanations on the extension #### The prior distribution <span class="math display">\[
+\begin{aligned}
+A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
+\end{aligned}
+\\
+\begin{aligned}
+\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}
+\end{aligned}\\
+\begin{aligned}
+\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{aligned}
+\]</span> #### The posterior distribution In this section, we will derive the full-conditional posterior distribution of <span class="math inline">\(\kappa\)</span> and the joint full-conditional posterior distribution of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma,\color{red}{\kappa})p(\Sigma)p(\color{red}{\kappa})
+\end{aligned}
+\]</span> Let’s focus on the kernel</p>
+</section>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
@@ -228,9 +352,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -295,6 +433,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
