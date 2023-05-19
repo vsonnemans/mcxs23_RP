@@ -86,8 +86,11 @@ cpi = na.omit(as.data.frame(read_rba(series_id = "GCPIAG")))
 cpi = cpi[352:403,]
 cpi$date = as.Date(as.character(cpi$date),format="%Y-%m-%d")  
 
+#Put the data in one dataframe
+Y.df <- data.frame(pce$date, pce$value, inc$value, cpi$value)
+colnames(Y.df) <- c("Date","Household final consumption expenditures","Real household disposable income","CPI")
 
-
+#brewer.pal(4, "Set3")
 plot_pce <- ggplot(data=pce, aes(x=date, y=value))+ scale_y_continuous(labels=scales::comma_format(big.mark=','))+ xlab(NULL)+ ylab(NULL) + geom_line(color="#8DD3C7") +ggtitle("PCE") + theme(plot.title = element_text(size=12))+ theme_minimal()
 plot_inc <- ggplot(data=inc, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#8DD3C7") +ggtitle("Real household disposable income") + theme(plot.title = element_text(size=12))+ theme_minimal()
 plot_sent <- ggplot(data=sent, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Consumer sentiment indicator") + theme(plot.title = element_text(size=12))+ theme_minimal()
@@ -176,7 +179,7 @@ p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mi
 $$
 Let's focus on the kernel
 
-
+```{=tex}
 \begin{aligned}
 
 p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
@@ -193,10 +196,10 @@ p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
 &\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
 
 \end{aligned}
-
+```
 
 We can now complete the squares for the green part of the equation.
-
+```{=tex}
 \begin{aligned}
 & 
 \color{blue}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})}
@@ -214,7 +217,7 @@ We can now complete the squares for the green part of the equation.
 \color{red}{+ Y^\prime Y}+ \underline{S} \color{green}{+ \underline{A}^\prime \underline{V}^{-1} \underline{A}}\\
 & = A^\prime (X^\prime X+ \underline{V}^{-1})A -2A^\prime (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}
-
+```
 
 We can set  $\overline{V}^{-1}=X^\prime X+ \underline{V}^{-1}$ 
 $$
@@ -252,7 +255,89 @@ $$
 $$
 
 ### The Code for Bayesian VAR estimation
+```{r function based on basic model}
+#| echo: true
+#| message: false
+#| warning: false
+# Bayesian estimation of the baseline model
 
+## Specify the setup
+N = 3
+p = 4
+
+## Create Y and X matrices
+y       = ts(Y.df[,c(2,3,4)], start=c(2010,1), frequency=4, names=c("pce","inc","cpi"))
+Y       = ts(y[5:nrow(y),], start=c(2011,1), frequency=4)
+X       = matrix(1,nrow(Y),1)
+for (i in 1:p){
+  X     = cbind(X,y[5:nrow(y)-i,])
+}
+
+## MLE
+A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/T
+
+## Specify the priors (Minnesota prior)
+kappa.1           = 0.02^2
+kappa.2           = 100
+A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] = diag(N)
+
+priors = list(
+  A.prior     = A.prior,
+  V.prior     = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N))),
+  S.prior     = diag(diag(Sigma.hat)),
+  nu.prior    = N+1 
+)
+
+## BVAR function
+BVAR = function(Y,X,priors,S){
+  
+  # normal-inverse Wishard posterior parameters
+  V.bar.inv   = t(X)%*%X + diag(1/diag(priors$V.prior))
+  V.bar       = solve(V.bar.inv)
+  A.bar       = V.bar%*%(t(X)%*%Y + diag(1/diag(priors$V.prior))%*%priors$A.prior)
+  nu.bar      = nrow(Y) + priors$nu.prior
+  S.bar       = priors$S.prior + t(Y)%*%Y + t(priors$A.prior)%*%diag(1/diag(priors$V.prior))%*%priors$A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+  S.bar.inv   = solve(S.bar)
+  
+  # posterior draws
+  Sigma.posterior   = rWishart(sum(S), df=nu.bar, Sigma=S.bar.inv)
+  Sigma.posterior   = apply(Sigma.posterior,3,solve)
+  Sigma.posterior   = array(Sigma.posterior,c(N,N,sum(S)))
+  A.posterior       = array(rnorm(prod(c(dim(A.bar),sum(S)))),c(dim(A.bar),sum(S)))
+  L                 = t(chol(V.bar))
+  
+  for (s in 1:sum(S)){
+    A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+  }
+  
+  posterior = list(
+    Sigma.posterior   = Sigma.posterior[,,-(1:S[1])], #getting rid of first S[1] draws
+    A.posterior       = A.posterior[,,-(1:S[1])]
+  )
+  return(posterior)
+}
+
+## Apply function BVAR
+S               = c(500,50000)
+posterior.draws = BVAR(Y=Y, X=X, priors=priors, S=S)
+```
+
+The output of the BVAR function applied on the baseline model is: 
+```{r function based on basic model}
+#| echo: true
+#| message: false
+#| warning: false
+round(apply(posterior.draws$A.posterior, 1:2, mean),3)
+```
+
+```{r function based on basic model}
+#| echo: true
+#| message: false
+#| warning: false
+round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
+```
 ## The extended model
 Explanations on the extension
 
