@@ -19,13 +19,13 @@ text-align: justify !important
 
 > **Keywords.** Bayesian Vars, Google Trends, new data types
 
-## The question, objective and motivation
+# The question, objective and motivation
 
-### Research question
+## Research question
 
 Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in Australia? Which combination of traditional and alternative data provides the highest accuracy in the latter indicator?
 
-### Objective and Motivation
+## Objective and Motivation
 
 As it drives around 50% of the Australian GDP, Household Final Consumption Expenditures (PCE) is a leading indicator to gauge the economic health of a country. There is thus a high incentive to improve the accuracy of its predictions. This has encouraged researchers to investigate big data as alternative sources. For instance, Schimdt and Vosen (2009) use search query time-series provided by Google Trends to forecast consumption. Esteves (2009), Aprigliano, et al. (2019), Galbraith and Tkacz (2013), Carlsen and Storgaard (2010) analyze electronic payments to predict consumption as these can track a large percentage of spending activities. Ellingsen, et al. (2021) demonstrate that news media data capture information about consumption that hard economic indicators do not. Gil et al. (2018) investigate the potential of the Economic Policy Uncertainty index derived from news data and developed by Baker et al. (2016) to predict consumption.
 
@@ -33,7 +33,7 @@ According to Professor Tomasz Wozniak from the University of Melbourne, forecast
 
 This paper will compare the forecasts of PCE in Australia from Bayesian VARs and several extensions applied on different sets of variables. These datasets will include both traditional macroeconomic variables computed by statistical offices and alternative data such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE.
 
-## The data and their properties
+# The data and their properties
 
 To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.
 
@@ -100,9 +100,9 @@ plot_pce+plot_inc+plot_sent+plot_cpi + plot_layout(heights = c(3,3))})
 
 As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package "gtrendsR". The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. Moreover, Google Trends have been quite extensively studied to forecast labor market indicators but only a few articles have focused on PCE.
 
-## The Modelling Framework 
+# The Modelling Framework 
 
-### The Baseline Model
+## The Baseline Model
 
 The model used for the forecasting experiment is a VAR(p) model:
 
@@ -129,7 +129,7 @@ $$
 
 Where $Y$ is a $T\times5$ matrix, $X$ is a $T\times(1+(5\times p))$, $A$ is a $(1+(5\times p))\times 5$ matrix that contains the relationships between the variables and $E$ is a $T\times5$. T and p are yet to be determined during the continuation of this research project.
 
-#### The Likelihood function
+### The Likelihood function
 
 $$
 \begin{aligned}
@@ -144,7 +144,9 @@ L(A, \Sigma \mid Y, X) & \propto det(\Sigma)^{-\frac{T}{2}} \exp \left\{-\frac{1
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\}
 \end{aligned}
 $$
-#### The prior distributions
+
+
+### The prior distributions
 $$
 \begin{aligned}
 &A \mid \Sigma \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \underline{V}) \\
@@ -164,8 +166,9 @@ V as
 S as 
 Nu as 
 
-#### The posterior distribution
-##### The Derivations of the posterior distribution
+### The posterior distribution
+
+#### The Derivations of the posterior distribution
 $$
 \begin{aligned}
 p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma)p(\Sigma)
@@ -173,8 +176,9 @@ p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mi
 $$
 Let's focus on the kernel
 
-$$
+
 \begin{aligned}
+
 p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
@@ -187,10 +191,12 @@ p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
 
 \color{green}[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
 &\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
+
 \end{aligned}
-$$
+
+
 We can now complete the squares for the green part of the equation.
-$$
+
 \begin{aligned}
 & 
 \color{blue}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})}
@@ -208,15 +214,15 @@ $$
 \color{red}{+ Y^\prime Y}+ \underline{S} \color{green}{+ \underline{A}^\prime \underline{V}^{-1} \underline{A}}\\
 & = A^\prime (X^\prime X+ \underline{V}^{-1})A -2A^\prime (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}
-$$
 
-We can set $\overline{V}^{-1} =X^\prime X+ \underline{V}^{-1}$ 
+
+We can set  $\overline{V}^{-1}=X^\prime X+ \underline{V}^{-1}$ 
 $$
 \begin{aligned}
 & = A^\prime \color{green}{\overline{V}^{-1}}A -2A^\prime \color{green}{\overline{V}^{-1}\overline{V}} (X^\prime Y+\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \underline{V}^{-1} \underline{A}
 \end{aligned}
 $$
-We can set $\overline{A} = \overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})$
+We can set  $\overline{A}=\overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})$
 
 $$
 \begin{aligned}
@@ -228,11 +234,13 @@ Let's put the latter expression back in the $exp$.
 
 $$
 \begin{aligned}
-\exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\overline{A})^{\prime} \overline{V}^{-1}(A-\overline{A})\right]\right\}\exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}\overline{S}}
+\exp\left\{-\frac{1}{2}tr[\Sigma^{-1}(A-\overline{A})^{\prime}\overline{V}^{-1}(A-\overline{A})]\right\}
+\exp\left\{-\frac{1}{2}tr[\Sigma^{-1}\overline{S}]\right\}
 \end{aligned}
 $$
 $$
-\begin{aligned}
+\boxed{
+\begin{array}{rcl}
 &p(A,\Sigma \mid Y,X)= p(A \mid Y,X,\Sigma)p(\Sigma \mid Y,X) \\
 &p(A \mid Y,X,\Sigma)=\mathcal{M N}_{K\times N}(\overline{A},\Sigma,\overline{V})\\
 &p(\Sigma \mid Y,X)=\mathcal{I W}_N (\overline{S},\overline{\nu})\\
@@ -240,29 +248,29 @@ $$
 & \overline{A}=\overline{V}(X^\prime Y+\underline{V}^{-1}\underline{A})\\
 & \overline{\nu}=T+\underline{\nu}\\
 & \overline{S}=\underline{S}+Y^\prime Y+\underline{A}^\prime \underline{V}^{-1}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
-\end{aligned}
+\end{array}}
 $$
-##### The Code for Bayesian VAR estimation
 
-### The extension of the model
+### The Code for Bayesian VAR estimation
+
+## The extended model
 Explanations on the extension
-#### The prior distribution
-$$
-\begin{aligned}
-A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
-\end{aligned} 
-\\
-\begin{aligned}
-\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}
-\end{aligned}\\
-\begin{aligned}
-\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
-\end{aligned}
-$$
-#### The posterior distribution
-In this section, we will derive the full-conditional posterior distribution of $\kappa$ and the joint full-conditional posterior distribution of $A$ and $\Sigma$.
 
-##### The derivations of the joint full-conditional posterior distribution of $A$ abd $\Sigma$
+### The prior distribution
+$$
+\begin{gather*}
+A \mid \Sigma,\color{red}{\kappa} \sim  \mathcal{M N} _{T \times N}(\underline{A}, \Sigma, \color{red}{\kappa}\underline{V}) \\
+\color{red}{\kappa \sim \mathcal{IG2}(\underline{s}_\kappa,\underline{\nu}_\kappa)}\\
+\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{gather*}
+$$
+
+### The posterior distribution
+
+In this section, we will derive the joint full-conditional posterior distribution of $A$ and $\Sigma$ and the full-conditional posterior distribution of $\kappa$.
+
+#### The Derivations of the joint full-conditional posterior distribution of A and Sigma
+
 $$
 \begin{aligned}
 p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma,\color{red}{\kappa})p(\Sigma)p(\color{red}{\kappa})
@@ -286,6 +294,8 @@ p(A,\Sigma \mid Y,X,\color{red}{\kappa}) \propto & det (\Sigma)^{-\frac{T}{2}} \
 &\left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
 \end{aligned}
 $$
+
+
 $$
 \begin{aligned}
 & 
@@ -304,16 +314,22 @@ $$
 & = A^\prime (X^\prime X+ \color{red}{\frac{1}{\kappa}}\underline{V}^{-1})A -2A^\prime (X^\prime Y+\color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}) + Y^\prime Y+ \underline{S} + \underline{A}^\prime \color{red}{\frac{1}{\kappa}}\underline{V}^{-1} \underline{A}
 \end{aligned}
 $$
+
+
 $$
-\begin{aligned}
+\boxed{
+\begin{array}{rcl}
 &p(A,\Sigma \mid Y,X,\color{red}{\kappa})= \mathcal{MNIW}_{K\times N}(\overline{A},\overline{V},\overline{S},\overline{\nu}) \\
 & \overline{V} = (X^\prime X + \color{red}{\frac{1}{\kappa}}\underline{V}^{-1})^{-1}\\
 & \overline{A}=\overline{V}(X^\prime Y+\color{red}{\frac{1}{\kappa}}\underline{V}^{-1}\underline{A})\\
 & \overline{\nu}=T+\underline{\nu}\\
 & \overline{S}=\underline{S}+Y^\prime Y+\underline{A}^\prime \underline{V}^{-1}\color{red}{\frac{1}{\kappa}}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
-\end{aligned}
+\end{array}}
 $$
-######The Derivations of the full-conditional posterior distribution of $\kappa$
+
+#### The Derivations of the full-conditional posterior distribution of kappa
+
+
 $$
 \begin{aligned}
 p(\kappa \mid A, \Sigma, Y,X) & =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}_{\kappa}, \underline{\nu}_{\kappa})p(A,\Sigma)\\
@@ -329,6 +345,23 @@ p(\kappa \mid A, \Sigma, Y,X) & =L(A,\Sigma \mid Y,X)p(\kappa \mid \underline{s}
 
 \end{aligned}
 $$
+We obtain the following full-conditional posterior distribution of $\kappa$:
+
+$$
+\boxed{
+\begin{array}{rcl}
+&\kappa \sim \mathcal{IG2}(\overline{s}_{\kappa},\overline{\nu}_{\kappa})\\
+& \overline{s}_{\kappa}=\underline{s}_{\kappa}+\operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\\
+&\overline{\nu}_{\kappa}=\underline{\nu}+KN
+\end{array}
+}
+$$
+
+### The code for Bayesian VAR estimation
+
+## The model proof
+
+
 ## References
 
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
