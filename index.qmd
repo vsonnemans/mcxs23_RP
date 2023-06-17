@@ -64,38 +64,76 @@ library(timeDate)
 library(readabs)
 library(zoo)
 library(RColorBrewer)
+library(openxlsx)
 
-#Our variables
 #Household final consumption expenditures 
-pce = na.omit(as.data.frame(readrba::read_rba(series_id = "GGDPECCVPSH")))  
-pce = pce[203:254,]
-pce$date = as.Date(as.character(pce$date),format="%Y-%m-%d")  
+pce.dl<-read_rba(series_id = "GGDPECCVPSH")
+pce<-to.quarterly(xts(pce.dl$value, pce.dl$date), 
+                  OHLC = FALSE)
+pce<-pce[163:254,]
+#pce = na.omit(as.data.frame(read_rba(series_id = "GGDPECCVPSH")))  
+#pce = pce[203:254,]
+#pce$date = as.Date(as.character(pce$date),format="%Y-%m-%d")  
 
 #Real household disposable income
-inc = na.omit(as.data.frame(read_rba(series_id = "GGDPICHRDI")))  
-inc = inc[203:254,]
-inc$date = as.Date(as.character(inc$date),format="%Y-%m-%d")  
-
-#Consumer sentiment indicator
-sent = na.omit(as.data.frame(read_rba(series_id = "GICWMICS")))  
-sent$date = as.Date(as.character(sent$date),format="%Y-%m-%d")  
-
+inc.dl<-read_rba(series_id = "GGDPICHRDI")
+inc<-to.quarterly(xts(inc.dl$value, inc.dl$date), 
+                  OHLC = FALSE)
+inc<-inc[163:254,]
 
 #Inflation-Consumer Price Index
-cpi = na.omit(as.data.frame(read_rba(series_id = "GCPIAG"))) 
-cpi = cpi[352:403,]
-cpi$date = as.Date(as.character(cpi$date),format="%Y-%m-%d")  
+cpi.dl<-read_rba(series_id = "GCPIAG")
+temp_cpi<-to.quarterly(xts(cpi.dl$value, cpi.dl$date), 
+                       OHLC = FALSE)
+cpi <- 100*diff(temp_cpi)/temp_cpi
+cpi<-cpi[312:403]
 
-#Put the data in one dataframe
-Y.df <- data.frame(pce$date, pce$value, inc$value, cpi$value)
-colnames(Y.df) <- c("Date","Household final consumption expenditures","Real household disposable income","CPI")
+#Consumer Confidence Index from the Roy Morgan
+# Index value, quarterly ; Mar-2000 to Mar-2023
+consum_dwnld  = read.xlsx("https://roymorgan-cms-dev.s3.ap-southeast-2.amazonaws.com/wp-content/uploads/2023/03/06052804/9180-ANZ-Roy-Morgan-Australian-CC-Data-1986-2023.xlsx",sheet=20)
+consum_dwnld  = data.frame(na.omit(consum_dwnld[,4]))
+consum_date   = seq(as.Date('2000-03-31'), as.Date('2023-03-31'), by = "quarter")
+row.names(consum_dwnld) = consum_date
+consum_tmp    = as.xts(consum_dwnld)
+consum_sent    = xts(consum_tmp, seq(as.Date('2000-03-31'), by = "quarter", length.out = length(consum_tmp)))
+consum_sent <- consum_sent[1:92,]
 
-#brewer.pal(4, "Set3")
-plot_pce <- ggplot(data=pce, aes(x=date, y=value))+ scale_y_continuous(labels=scales::comma_format(big.mark=','))+ xlab(NULL)+ ylab(NULL) + geom_line(color="#8DD3C7") +ggtitle("PCE") + theme(plot.title = element_text(size=12))+ theme_minimal()
-plot_inc <- ggplot(data=inc, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#8DD3C7") +ggtitle("Real household disposable income") + theme(plot.title = element_text(size=12))+ theme_minimal()
-plot_sent <- ggplot(data=sent, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Consumer sentiment indicator") + theme(plot.title = element_text(size=12))+ theme_minimal()
-plot_cpi <- ggplot(data=cpi, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Consumer Price Index") + theme(plot.title = element_text(size=12))+ theme_minimal()
-plot_pce+plot_inc+plot_sent+plot_cpi + plot_layout(heights = c(3,3))})
+#Lending rates
+mortgage_rate.dl<-read_rba(series_id = "FILRHL3YF")
+mortgage_rate.l<-mortgage_rate.dl[113:391,]
+mortgage_rate<-to.quarterly(xts(mortgage_rate.l$value, mortgage_rate.l$date), 
+                            OHLC = FALSE)
+mortgage_rate<-mortgage_rate[1:92,]
+#mortgage_rates = na.omit(as.data.frame(read_rba(series_id = "FILRHL3YF"))) 
+
+#Unemployment rates
+unemp_rate.dl<-read_rba(series_id = "GLFSURSA")
+unemp_rate.l<-unemp_rate.dl[264:542,]
+unemp_rate<-to.quarterly(xts(unemp_rate.l$value, unemp_rate.l$date), 
+                         OHLC = FALSE)
+unemp_rate<-unemp_rate[1:92,]
+#unemp_rate = na.omit(as.data.frame(read_rba(series_id = "GLFSURSA"))) 
+
+# Merge data into one matrix
+Y.df  <- data.frame(pce, inc ,cpi,  consum_sent, mortgage_rate, unemp_rate)
+
+varname_vec <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate")
+colnames(Y.df) <- varname_vec
+
+# Transform into natural logs
+df.log <- data.frame(log(pce),
+                     log(inc),
+                     cpi,
+                     log(consum_sent),
+                     log(mortgage_rate),
+                     log(unemp_rate))
+
+colnames(df.log) <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate")
+df.log$CPI <- as.numeric(as.character(cpi))
+
+
+
+})
 
 ```
 
@@ -267,17 +305,22 @@ $$
 # Bayesian estimation of the baseline model
 
 ## Specify the setup
-N = 3
-p = 4
+N       = ncol(df.log)
+p       = 4
+K       = 1+N*p
+S       = c(5000,100000)
+h       = 20
+set.seed(123456)
 
 ## Create Y and X matrices
-y       = ts(Y.df[,c(2,3,4)], start=c(2010,1), frequency=4, names=c("pce","inc","cpi"))
-Y       = ts(y[5:nrow(y),], start=c(2011,1), frequency=4)
+y       = ts(df.log, start=c(2000,1), frequency=4)
+Y       = ts(y[5:nrow(y),], start=c(2001,1), frequency=4)
 X       = matrix(1,nrow(Y),1)
 for (i in 1:p){
   X     = cbind(X,y[5:nrow(y)-i,])
 }
 
+T       = nrow(Y)
 ## MLE
 A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
 Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/T
@@ -296,6 +339,7 @@ priors = list(
 )
 
 ## BVAR function
+
 BVAR = function(Y,X,priors,S){
   
   # normal-inverse Wishard posterior parameters
@@ -306,7 +350,7 @@ BVAR = function(Y,X,priors,S){
   S.bar       = priors$S.prior + t(Y)%*%Y + t(priors$A.prior)%*%diag(1/diag(priors$V.prior))%*%priors$A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
   S.bar.inv   = solve(S.bar)
   
-  # posterior draws
+  #posterior draws
   Sigma.posterior   = rWishart(sum(S), df=nu.bar, Sigma=S.bar.inv)
   Sigma.posterior   = apply(Sigma.posterior,3,solve)
   Sigma.posterior   = array(Sigma.posterior,c(N,N,sum(S)))
@@ -314,18 +358,18 @@ BVAR = function(Y,X,priors,S){
   L                 = t(chol(V.bar))
   
   for (s in 1:sum(S)){
-    A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+    A.posterior[,,s]= A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
   }
   
   posterior = list(
-    Sigma.posterior   = Sigma.posterior[,,-(1:S[1])], #getting rid of first S[1] draws
-    A.posterior       = A.posterior[,,-(1:S[1])]
+    Sigma.posterior   = Sigma.posterior,
+    A.posterior       = A.posterior
   )
   return(posterior)
 }
 
+
 ## Apply function BVAR
-S               = c(500,50000)
 posterior.draws = BVAR(Y=Y, X=X, priors=priors, S=S)
 ```
 
@@ -364,7 +408,7 @@ In this section, we will derive the the joint full-conditional posterior distrib
 $$
 \begin{aligned}
 p(A,\Sigma \mid Y,X,{\color{red}\kappa}) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma,{\color{red}\kappa})p(\Sigma)p({\color{red}\kappa})
-\end{aligned}
+\end{aligned} 4
 $$
 Let's focus on the kernel
 
@@ -449,10 +493,175 @@ $$
 ### The code for Bayesian VAR estimation
 Let's adapt the BVAR function to the extended model. 
 
+```{r extension model}
+#| echo: true
+#| message: false
+#| warning: false
+#Extended model
+
+## Modify the priors
+kappa.1           = 1
+kappa.2           = 10
+initial_kappa     = 100
+A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] = diag(N)
+
+priors = list(
+  A.prior            = A.prior,
+  V.prior            = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N))),
+  S.prior            = diag(diag(Sigma.hat)),
+  nu.prior           = N+1,
+  s.kappa.prior      = 2,
+  nu.kappa.prior     = 4
+)
+
+## Modify BVAR function
+
+BVAR_extension = function(X,Y,priors,initial_kappa,S){
+  
+  A.posterior        = array(NA, dim = c(K,N,sum(S)))
+  Sigma.posterior    = array(NA,dim=c(N,N,sum(S)))
+  kappa.posterior    = matrix(NA, sum(S), 1) 
+  kappa.posterior[1] = initial_kappa
+  
+  for (s in 1:sum(S)){
+    
+    # full-cond of joint posterior of A and Sigma
+    V.bar.inv   = t(X)%*%X + diag(1/diag(kappa.posterior[s]*priors$V.prior))
+    V.bar       = solve(V.bar.inv)
+    A.bar       = V.bar%*%(t(X)%*%Y + diag(1/diag(kappa.posterior[s]*priors$V.prior))%*%priors$A.prior)
+    nu.bar      = nrow(Y) + priors$nu.prior
+    S.bar       = priors$S.prior + t(Y)%*%Y + t(priors$A.prior)%*%diag(1/diag(kappa.posterior[s]*priors$V.prior))%*%priors$A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+    S.bar.inv   = solve(S.bar)
+    
+    Sigma.posterior.dist   = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
+    Sigma.draw             = apply(Sigma.posterior.dist,3,solve)
+    Sigma.posterior[,,s]   = Sigma.draw
+    A.posterior[,,s]            = array(rnorm(prod(c(dim(A.bar),1))),c(dim(A.bar),1))
+    L                      = t(chol(V.bar))
+    A.posterior[,,s]       = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+    
+    #full conditional posterior of kappa
+    if (s!=sum(S)){
+    s.kappa.bar           = priors$s.kappa.prior + sum(diag(solve( Sigma.posterior[,,s])*t(A.posterior[,,s]-priors$A.prior)%*%diag(1/diag(priors$V.prior))%*%(A.posterior[,,s]-priors$A.prior)))
+    nu.kappa.bar          = priors$nu.kappa.prior + (K*N)
+    kappa.draw            = s.kappa.bar/rchisq(1, df=nu.kappa.bar)
+    kappa.posterior[s+1]  = kappa.draw
+    }
+  }
+  
+  posterior.extension = list(
+    Sigma.posterior   = Sigma.posterior[,,S[1]+1:S[2]], #getting rid of first S[1] draws
+    A.posterior       = A.posterior[,,S[1]+1:S[2]],
+    kappa.posterior   = kappa.posterior[S[1]+1:S[2],1]
+  )
+  return(posterior.extension)
+}
+
+## Apply function BVAR_extension
+posterior.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_kappa, S=S)
+
+```
+
+The output of the BVAR function applied on the baseline model is: 
+```{r output extension}
+#| echo: true
+#| message: false
+#| warning: false
+
+round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
+round(apply(posterior.draws$A.posterior, 1:2, mean),3)
+round(mean(posterior.draws$kappa.posterior),3)
+```
+
 ## The model proof
 
+### Set up of the model proof
 
+```{r model proof set up}
+#| echo: true
+#| message: false
+#| warning: false
 
+### Specify the setup
+p = 1
+N = 2
+K = 1+N*p
+S = c(5000,50000)
+
+### Generate RW data process
+rw.1    = cumsum(rnorm(1000,0,1))
+rw.2    = cumsum(rnorm(1000,0,1))
+y       = matrix(cbind(rw.1,rw.2),nrow=1000,ncol=N)
+
+### Create Y and X matrices
+Y       = ts(y[2:nrow(y),])
+X       = matrix(1,nrow(Y),1)
+X       = cbind(X,y[1:nrow(y)-p,])
+
+```
+
+### Proof of baseline model
+
+```{r proof of baseline}
+#| echo: true
+#| message: false
+#| warning: false
+### MLE
+A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+### Specify the priors (Minnesota prior)
+kappa.1           = 0.02^2
+kappa.2           = 100
+A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] = diag(N)
+
+priors = list(
+  A.prior     = A.prior,
+  V.prior     = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N))),
+  S.prior     = diag(diag(Sigma.hat)),
+  nu.prior    = N+1 
+)
+
+## Apply function BVAR
+posterior.draws = BVAR(Y=Y, X=X, priors=priors, S=S)
+round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
+round(apply(posterior.draws$A.posterior, 1:2, mean),3)
+```
+### Proof of extended model
+
+```{r proof of extension}
+#| echo: true
+#| message: false
+#| warning: false
+### Proof of extension model
+
+### MLE
+A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+### Modify the priors
+kappa.1           = 1
+kappa.2           = 10
+initial_kappa     = 100
+A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] = diag(N)
+
+priors = list(
+  A.prior            = A.prior,
+  V.prior            = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N))),
+  S.prior            = diag(diag(Sigma.hat)),
+  nu.prior           = N+1,
+  s.kappa.prior      = 2,
+  nu.kappa.prior     = 4
+)
+
+## Apply function BVAR_extension
+posterior.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_kappa, S=S)
+round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
+round(apply(posterior.draws$A.posterior, 1:2, mean),3)
+```
 ## References
 
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
