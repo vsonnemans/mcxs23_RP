@@ -914,6 +914,8 @@ posterior.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_
 round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
 round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 ```
+
+extendend? 
 ## References
 
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
