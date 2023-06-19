@@ -23,7 +23,7 @@ text-align: justify !important
 
 ## Research question
 
-Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in the US? Which combination of traditional and alternative data provides the highest accuracy in the latter indicator?
+Can Bayesian VARs and alternative data help better estimate the future state of Personal Consumption Expenditures in the US? 
 
 ## Objective and Motivation
 
@@ -31,13 +31,13 @@ As it drives around 50% of the US GDP, Personal Consumption Expenditures (PCE) i
 
 According to Professor Tomasz Wozniak from the University of Melbourne, forecasting with Bayesian VARs often leads to more precise forecasts than when using the frequentist approach to forecasting because of the effect of the priors. Despite the benefits of Bayesian VARs, there is nearly no research on the combination of Bayesian VARs and alternative data. Existing articles either investigate the use of Bayesian estimation models or of alternative data to forecast indicators but do not consider both together.
 
-This paper will compare the forecasts of PCE in Australia from Bayesian VARs and several extensions applied on different sets of variables. These datasets will include both traditional macroeconomic variables computed by statistical offices and alternative data such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE.
+This paper will compute and compare the forecasts of PCE in the US from Bayesian VARs and several extensions applied on traditional macroeconomic variables computed by statistical offices and alternative variables such as Google Trends. This research project contributes to the literature by studying PCE, an indicator that has to date received scant attention from the Bayesian VARs literature. Moreover, it proposes the first investigation of the combination of Bayesian VARs with alternative data to forecast PCE.
 
 # The data and their properties
 
 To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.
 
-The traditional variables included in this analysis were collected from the readrba package and will be:
+The traditional variables included in this analysis were collected from the fredr package and will be:
 
 -   Real personal consumption expenditures
 
@@ -134,7 +134,6 @@ varname_vec <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Ind
 colnames(Y.df) <- varname_vec
 ```
 
-------------------------------------------------------------------------
 
 As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package "gtrendsR". The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. Moreover, Google Trends have been quite extensively studied to forecast labor market indicators but only a few articles have focused on PCE.
 
@@ -224,7 +223,7 @@ if (adf[4]<=0.05){
 #Apply transformations
 df.log <- data.frame(log(pce),
                      log(inc),
-                     diff(cpi),
+                     log(cpi),
                      log(consum_sent),
                      mortgage_rate,
                      unemp_rate,
@@ -484,17 +483,16 @@ $$
 
 # Bayesian estimation of the baseline model
 
-## Specify the setup
+### Specify the setup
 N       = ncol(df.log)
 p       = 4
 K       = 1+N*p
-S       = c(5000,100000)
-h       = 20
+S       = c(5000,50000)
 set.seed(123456)
 
-## Create Y and X matrices
-y       = ts(df.log, start=c(2000,1), frequency=4)
-Y       = ts(y[5:nrow(y),], start=c(2001,1), frequency=4)
+### Create Y and X matrices
+y       = ts(df.log, start=c(2004,1), frequency=12)
+Y       = ts(y[5:nrow(y),], start=c(2004,2), frequency=12)
 X       = matrix(1,nrow(Y),1)
 for (i in 1:p){
   X     = cbind(X,y[5:nrow(y)-i,])
@@ -676,9 +674,10 @@ Let's adapt the BVAR function to the extended model.
 #| echo: true
 #| message: false
 #| warning: false
-#Extended model
+####Extended model
 
-## Modify the priors
+### Modify the priors
+S       = c(5000,50000)
 kappa.1           = 1
 kappa.2           = 10
 initial_kappa     = 100
@@ -694,7 +693,7 @@ priors = list(
   nu.kappa.prior     = 4
 )
 
-## Modify BVAR function
+### Modify BVAR function
 
 BVAR_extension = function(X,Y,priors,initial_kappa,S){
   
@@ -704,7 +703,6 @@ BVAR_extension = function(X,Y,priors,initial_kappa,S){
   kappa.posterior[1] = initial_kappa
   
   for (s in 1:sum(S)){
-    
     # full-cond of joint posterior of A and Sigma
     V.bar.inv   = t(X)%*%X + diag(1/diag(kappa.posterior[s]*priors$V.prior))
     V.bar       = solve(V.bar.inv)
@@ -712,6 +710,7 @@ BVAR_extension = function(X,Y,priors,initial_kappa,S){
     nu.bar      = nrow(Y) + priors$nu.prior
     S.bar       = priors$S.prior + t(Y)%*%Y + t(priors$A.prior)%*%diag(1/diag(kappa.posterior[s]*priors$V.prior))%*%priors$A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
     S.bar.inv   = solve(S.bar)
+    
     
     Sigma.posterior.dist   = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
     Sigma.draw             = apply(Sigma.posterior.dist,3,solve)
@@ -722,10 +721,10 @@ BVAR_extension = function(X,Y,priors,initial_kappa,S){
     
     #full conditional posterior of kappa
     if (s!=sum(S)){
-    s.kappa.bar           = priors$s.kappa.prior + sum(diag(solve( Sigma.posterior[,,s])*t(A.posterior[,,s]-priors$A.prior)%*%diag(1/diag(priors$V.prior))%*%(A.posterior[,,s]-priors$A.prior)))
-    nu.kappa.bar          = priors$nu.kappa.prior + (K*N)
-    kappa.draw            = s.kappa.bar/rchisq(1, df=nu.kappa.bar)
-    kappa.posterior[s+1]  = kappa.draw
+      s.kappa.bar           = priors$s.kappa.prior + sum(diag(solve( Sigma.posterior[,,s])*t(A.posterior[,,s]-priors$A.prior)%*%diag(1/diag(priors$V.prior))%*%(A.posterior[,,s]-priors$A.prior)))
+      nu.kappa.bar          = priors$nu.kappa.prior + (K*N)
+      kappa.draw            = s.kappa.bar/rchisq(1, df=nu.kappa.bar)
+      kappa.posterior[s+1]  = kappa.draw
     }
   }
   
@@ -738,7 +737,7 @@ BVAR_extension = function(X,Y,priors,initial_kappa,S){
 }
 
 ## Apply function BVAR_extension
-posterior.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_kappa, S=S)
+posterior.ext.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_kappa, S=S)
 
 ```
 
@@ -748,28 +747,34 @@ The output of the BVAR function applied on the baseline model is:
 #| message: false
 #| warning: false
 
-round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
-round(apply(posterior.draws$A.posterior, 1:2, mean),3)
-round(mean(posterior.draws$kappa.posterior),3)
+round(apply(posterior.ext.draws$Sigma.posterior, 1:2, mean),3)
+round(apply(posterior.ext.draws$A.posterior, 1:2, mean),3)
+round(mean(posterior.ext.draws$kappa.posterior),3)
 ```
+
+# The baseline model enhanced by Stochastic Volatility conditional heteroskedasticity
 
 # Forecasting
 
-The objective of this report is to forecast the Household final consumption expenditures for the next 5 years (h=20). In this section, we will first base the forecasts on the baseline model and then repeat the same steps for the extended model where we estimate the hyper parameter $\kappa$ and the heteroskedasticity model. 
+The objective of this report is to forecast personal consumption expenditures for the next 3 years (h=36). In this section, we will first base the forecasts on the baseline model and then repeat the same steps for the extended model where we estimate the hyper parameter $\kappa$ and the heteroskedasticity model. 
 
 ## Forecasting with the baseline model
 
 To build the point forecasts, we use numerical integration to sample from the joint predictive density in the following steps: 
-\01. We sample posterior draws from $p(A,\Sigma \mid Y,X)$ by using the BVAR estimation sampler created above. 
-\02. We obtain $ \left\{ A^{(s)},\Sigma^{(s)} \right\}^S_{s=1}$
-\03. We sample draws from $\hat{p}(Y_{t+h}\mid Y_t)$ by:
+
+1. We sample posterior draws from $p(A,\Sigma \mid Y,X)$ by using the BVAR estimation sampler created above. 
+
+2.  We obtain $\left\{ A^{(s)},\Sigma^{(s)} \right\}^S_{s=1}$
+
+3. We sample draws from $\hat{p}(Y_{t+h}\mid Y_t)$ by:
 ```{=tex}
 \begin{align}
 Y^{(s)}_{t+h} \sim \mathcal{N}_{hN}(Y_{t+h\mid t}(A^{(s)}), Var[Y_{t+h \mid t} \mid A^{(s)}, \Sigma ^{(s)}]))
 \end{align}
 ```
-\04. We obtain $\left\{Y^{(s)}_{t+h}\right\}^{S}_{s=1}$
-\05. Characterise of the predictive density using $\left\{Y^{(s)}_{t+h}\right\}^{S}_{s=1}$
+4. We obtain $\left\{Y^{(s)}_{t+h}\right\}^{S}_{s=1}$
+
+5. Characterise of the predictive density using $\left\{Y^{(s)}_{t+h}\right\}^{S}_{s=1}$
 
 ```{r forecasting the baseline model}
 #| echo: true
@@ -777,11 +782,22 @@ Y^{(s)}_{t+h} \sim \mathcal{N}_{hN}(Y_{t+h\mid t}(A^{(s)}), Var[Y_{t+h \mid t} \
 #| warning: false
 # simulate draws from the predictive density
 library(mvtnorm)
-h = 20
-S = 50000
+library(progress)
+h = 36
+S = 5000
 Y.h         = array(NA,c(h,N,S))
 
+#Progress bar
+pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                       total = S,
+                       complete = "=",   # Completion bar character
+                       incomplete = "-", # Incomplete bar character
+                       current = ">",    # Current bar character
+                       clear = FALSE,    # If TRUE, clears the bar when finish
+                       width = 100)      # Width of the progress bar
+
 for (s in 1:S){
+  pb$tick() #for progress bar
   x.Ti        = Y[(nrow(Y)-h+1):nrow(Y),]
   x.Ti        = x.Ti[p:1,]
   for (i in 1:h){
@@ -790,7 +806,6 @@ for (s in 1:S){
     x.Ti        = rbind(Y.h[i,,s],x.Ti[1:(p-1),])
   }
 }
-
 # plots of forecasts
 library(plot3D)
 library(MASS)
@@ -806,30 +821,105 @@ plum.rgb = col2rgb("thistle")
 shade = rgb(plum.rgb[1],plum.rgb[2],plum.rgb[3],maxColorValue=255,alpha=100, names="thistle")
 
 
+par(mfrow=c(1,1), mar=rep(3,4),cex.axis=1.5)
+plot(1:(length(y[,1])+h),c(y[,1],pce.point.f), type="l", ylim=pce.range, axes=FALSE, xlab="", ylab="", lwd=2, col=plum)
+axis(1,c(1,49,97,145,193, nrow(y),nrow(y)+h),c("2004-01","2008-01","2012-01","2016-01","2020-01","",""), col=blue)
+axis(2,c(pce.range[1],mean(pce.range),pce.range[2]),c("","PCE",""), col=blue)
+abline(v=nrow(y), col="gray42")
+text(x=228, y=9.65, srt=90, "2023-02")
+abline(v=nrow(y)+12, col="gray42")
+text(x=238, y=9.65, srt=90, "2024-02")
+abline(v=nrow(y)+24, col="gray42")
+text(x=250, y=9.65, srt=90, "2025-02")
+polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[37:1]),
+        c(y[230,1],pce.interval.f[1,],pce.interval.f[2,36:1],y[230,1]),
+        col=shade, border=plum)
+dev.off()
+```
+
+The forecasts are built using the predictive density means and 90% highest density intervals. The above plot presents a sharp decline of personal consumption expenditures in the beginning of our forecasting horizon. A potential explanation could be that this drop is driven by the severe decline in the data caused by the COVID-19 crisis. The personal consumption expenditures is then predicted to continuously increase after March 2023. Moreover, we can see that the confidence interval increases for forecasts with longer time horizons. In 3 years, personal consumption expenditures are expected to be slightly lower than the current level. However, considering the width of the confidence interval, this result is quite uncertain. 
+
+## Forecasting with the extended model 
+
+We can repeat the same process for the extended model. 
+
+```{r forecasting the extended model}
+#| echo: true
+#| message: false
+#| warning: false
+
+# simulate draws from the predictive density
+library(mvtnorm)
+library(progress)
+h = 36
+S = 500
+Y.h         = array(NA,c(h,N,S))
+
+#Progress bar
+pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                       total = S,
+                       complete = "=",   # Completion bar character
+                       incomplete = "-", # Incomplete bar character
+                       current = ">",    # Current bar character
+                       clear = FALSE,    # If TRUE, clears the bar when finish
+                       width = 100)      # Width of the progress bar
+
+for (s in 1:S){
+  pb$tick() #for progress bar
+  x.Ti        = Y[(nrow(Y)-h+1):nrow(Y),]
+  x.Ti        = x.Ti[p:1,]
+  for (i in 1:h){
+    x.T         = c(1,as.vector(t(x.Ti)))
+    Y.h[i,,s]   = rmvnorm(1, mean = x.T%*%posterior.ext.draws$A.posterior[,,s], sigma=posterior.ext.draws$Sigma.posterior[,,s])
+    x.Ti        = rbind(Y.h[i,,s],x.Ti[1:(p-1),])
+  }
+}
+
+# plots of forecasts
+library(plot3D)
+library(MASS)
+library(HDInterval)
+pce.point.f    = apply(Y.h[,1,],1,mean) #one pce forecasts
+pce.interval.f = apply(Y.h[,1,],1,hdi,credMass=0.90)
+pce.range      = range(y[,1],pce.interval.f)
+
+blue  = "#05386B"
+plum      ="#BEBADA"
+plum.rgb = col2rgb("thistle")
+shade = rgb(plum.rgb[1],plum.rgb[2],plum.rgb[3],maxColorValue=255,alpha=100, names="thistle")
+
+
 
 par(mfrow=c(1,1), mar=rep(3,4),cex.axis=1.5)
 plot(1:(length(y[,1])+h),c(y[,1],pce.point.f), type="l", ylim=pce.range, axes=FALSE, xlab="", ylab="", lwd=2, col=plum)
-axis(1,c(1,41,80,88, nrow(y),nrow(y)+h),c("2000","2010","2020","2022","",""), col=blue)
-axis(2,c(pce.range[1],mean(pce.range),pce.range[2]),c("","HF Consumption Expenditures",""), col=blue)
-abline(v=92, col="gray42")
-text(x=91, y=12.7, srt=90, "2022 Q4")
-abline(v=96, col="gray42")
-text(x=95, y=12.7, srt=90, "2023 Q4")
-polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[21:1]),
-        c(y[92,1],pce.interval.f[1,],pce.interval.f[2,20:1],y[92,1]),
+axis(1,c(1,49,97,145,193, nrow(y),nrow(y)+h),c("2004-01","2008-01","2012-01","2016-01","2020-01","",""), col=blue)
+axis(2,c(pce.range[1],mean(pce.range),pce.range[2]),c("","PCE",""), col=blue)
+abline(v=nrow(y), col="gray42")
+text(x=228, y=9.635, srt=90, "2023-02")
+abline(v=nrow(y)+12, col="gray42")
+text(x=238, y=9.635, srt=90, "2024-02")
+abline(v=nrow(y)+24, col="gray42")
+text(x=250, y=9.635, srt=90, "2025-02")
+polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[37:1]),
+        c(y[230,1],pce.interval.f[1,],pce.interval.f[2,36:1],y[230,1]),
         col=shade, border=plum)
 dev.off()
 
+
+
 ```
 
-The forecasts are built using the predictive density means and 90% highest density intervals. The above plot presents a sharp decline of personal consumption expenditures in the first quarters of 2023. A potential explanation could be that this drop is mainly driven by the decline in the data caused by the COVID-19 crisis. The personal consumption expenditures is then predicted to increase back in 2024. 
+## Comparison of different forecasting models
 
-## Forecasting with the extended model 
+
+
+
 
 # The model proof
 
 ## Set up of the model proof
 
+Let's generate artificial data simulated from a bi-variate Gaussian random walk process with covariance matrix that is an identity matrix of order 2. To estimate the model, we consider one lag with the artificial data. 
 ```{r model proof set up}
 #| echo: true
 #| message: false
@@ -881,6 +971,7 @@ posterior.draws = BVAR(Y=Y, X=X, priors=priors, S=S)
 round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
 round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 ```
+As the obtained posterior mean of the autoregressive and the covariance matrices are close to an identity matrix and the posterior mean of the constant term is close to a vector containing only zeros, we can conclude that the model is correct. 
 ## Proof of extended model
 
 ```{r proof of extension}
@@ -914,6 +1005,11 @@ posterior.draws = BVAR_extension(Y=Y, X=X, priors=priors, initial_kappa=initial_
 round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
 round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 ```
+The results from the BVAR_extension function show that the correctness of the model. 
+
+# Conclusion
+
+
 ## References
 
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
