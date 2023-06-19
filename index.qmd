@@ -142,14 +142,14 @@ As for the alternative data, a Google Trends index will be included. Google Tren
 
 ## Preliminary data analysis
 
-### Augmented Dickey-Fuller test for unit roots
+### Augmented Dickey-Fuller test for unit roots of traditional variables
 ##### Table 1. ADF results for traditional log transformed variables {style="text-align: center;"}
 ```{r ADF on log data, echo = F, warning=FALSE, message = FALSE}
 ##### on log data
 # Transform into natural logs
 df.log <- data.frame(log(pce),
                      log(inc),
-                     (cpi),
+                     log(cpi),
                      log(consum_sent),
                      (mortgage_rate),
                      (unemp_rate),
@@ -219,8 +219,99 @@ if (adf[4]<=0.05){
     adf.sec.result[1,6] <- "Stationary"  
 } else {
     adf.sec.result[1,6] <- "Non-stationary"
-  }
+}
 
+#Apply transformations
+df.log <- data.frame(log(pce),
+                     log(inc),
+                     diff(cpi),
+                     log(consum_sent),
+                     mortgage_rate,
+                     unemp_rate,
+                     log(home_price))
+
+colnames(df.log) <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index")
+
+
+
+paged_table(as.data.frame(adf.sec.result))
+
+```
+### Augmented Dickey-Fuller test for unit roots of alternative variables
+##### Table 4. ADF results for the first difference of GT for PCE of durable goods
+```{r ADF on first diff of durable goods GT, echo = F, warning=FALSE, message = FALSE}
+# GT durable goods
+adf.dur.result <- as.data.frame(matrix(nrow=22,ncol=6,NA))
+varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
+colnames(adf.dur.result) <- varname_adf
+GT_dur_g_adf <- GT_dur_g[,3:24]
+colnames <- colnames(GT_dur_g_adf)
+
+for (i in 1:ncol(GT_dur_g_adf)){
+  adf <- adf.test(diff(GT_dur_g_adf[,i]))
+  adf.dur.result[i,1] <- colnames[i]
+  adf.dur.result[i,2] <- adf[1]
+  adf.dur.result[i,3] <- adf[2]
+  adf.dur.result[i,4] <- adf[3]
+  adf.dur.result[i,5] <- adf[4]
+  if (adf[4]<=0.05){
+    adf.dur.result[i,6] <- "Stationary"  
+  } else {
+    adf.dur.result[i,6] <- "Non-stationary"
+  }
+}
+
+paged_table(as.data.frame(adf.sec.result))
+
+```
+##### Table 5. ADF results for the first difference of GT for PCE of non-durable goods
+```{r ADF on first diff of non_durable goods GT, echo = F, warning=FALSE, message = FALSE}
+# GT durable goods
+adf.dur.result <- as.data.frame(matrix(nrow=22,ncol=6,NA))
+varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
+colnames(adf.dur.result) <- varname_adf
+GT_dur_g_adf <- GT_dur_g[,3:24]
+colnames <- colnames(GT_dur_g_adf)
+
+for (i in 1:ncol(GT_dur_g_adf)){
+  adf <- adf.test(diff(GT_dur_g_adf[,i]))
+  adf.dur.result[i,1] <- colnames[i]
+  adf.dur.result[i,2] <- adf[1]
+  adf.dur.result[i,3] <- adf[2]
+  adf.dur.result[i,4] <- adf[3]
+  adf.dur.result[i,5] <- adf[4]
+  if (adf[4]<=0.05){
+    adf.dur.result[i,6] <- "Stationary"  
+  } else {
+    adf.dur.result[i,6] <- "Non-stationary"
+  }
+}
+
+paged_table(as.data.frame(adf.sec.result))
+
+```
+##### Table 6. ADF results for the first difference of GT for PCE of services
+```{r ADF on first diff of services GT, echo = F, warning=FALSE, message = FALSE}
+# GT durable goods
+adf.dur.result <- as.data.frame(matrix(nrow=22,ncol=6,NA))
+varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
+colnames(adf.dur.result) <- varname_adf
+GT_dur_g_adf <- GT_dur_g[,3:24]
+colnames <- colnames(GT_dur_g_adf)
+
+for (i in 1:ncol(GT_dur_g_adf)){
+  adf <- adf.test(diff(GT_dur_g_adf[,i]))
+  adf.dur.result[i,1] <- colnames[i]
+  adf.dur.result[i,2] <- adf[1]
+  adf.dur.result[i,3] <- adf[2]
+  adf.dur.result[i,4] <- adf[3]
+  adf.dur.result[i,5] <- adf[4]
+  if (adf[4]<=0.05){
+    adf.dur.result[i,6] <- "Stationary"  
+  } else {
+    adf.dur.result[i,6] <- "Non-stationary"
+  }
+}
 
 paged_table(as.data.frame(adf.sec.result))
 
@@ -241,7 +332,7 @@ Where $N=11$ and $y_t$ is the vector of 11 variables:
 
 $$
 y_t=\left(\begin{array}{cc}\operatorname{pce}_t & =\text {Real PCE }  \\\operatorname{inc}_t & =\text { Real household disposable income } \\\text { cpi }_t & =\text { Consumer price index } \\\text { consum_sent}_t & =\text { Consumer sentiment indicator }\\\text { mortgage_rate}_t & =\text { Mortgage rate }\\\text { unemp_rate}_t & =\text { Unemployment rate }\\\text { home_price}_t & =\text { Home price index } \\\text{gt_dur_goods}_t & =\text { Google Trends index for PCE of durable goods }
-\\\text{gt_ndur_goods}_t & =\text { Google Trends index for PCE of non-durable goods }
+\\\text{gt_ndur_goods}_t & =\text { Google Trends index for PCE of non durable goods }
 \\\text{gt_services}_t & =\text { Google Trends index for PCE of services }
 \end{array}\right)
 $$
