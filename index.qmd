@@ -552,7 +552,7 @@ $$
 N       = ncol(df.log)
 p       = 4
 K       = 1+N*p
-S       = c(500,5000)
+S       = c(5000,50000)
 set.seed(123456)
 
 ### Create Y and X matrices
@@ -755,7 +755,7 @@ Let's adapt the BVAR function to the extended model.
 ####Extended model
 
 ### Modify the priors
-S       = c(500,5000)
+S       = c(5000,50000)
 kappa.1           = 1
 kappa.2           = 10
 initial_kappa     = 100
@@ -978,7 +978,7 @@ library(progress)
 N       = ncol(df.log)
 p       = 4
 K       = 1+N*p
-S       = c(50,1500)
+S       = c(3000,30000)
 h       = 20
 set.seed(123456)
 
@@ -1145,7 +1145,7 @@ Y^{(s)}_{t+h} \sim \mathcal{N}_{hN}(Y_{t+h\mid t}(A^{(s)}), Var[Y_{t+h \mid t} \
 library(mvtnorm)
 library(progress)
 h = 36
-S = 1000
+S = 45000
 Y.h         = array(NA,c(h,N,S))
 
 #Progress bar
@@ -1211,7 +1211,7 @@ We can repeat the same process for the extended model.
 library(mvtnorm)
 library(progress)
 h = 36
-S = 1000
+S = 45000
 Y.h         = array(NA,c(h,N,S))
 
 #Progress bar
@@ -1278,7 +1278,7 @@ dev.off()
 library(mvtnorm)
 library(progress)
 h = 36
-S = 1000
+S = 27000
 Y.h         = array(NA,c(h,N,S))
 
 #Progress bar
