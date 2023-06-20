@@ -15,7 +15,7 @@ text-align: justify !important
 ```
 
 ::: {.justify}
-> **Abstract.** Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in Australia? Which combination of traditional and alternative data provides the highest accuracy in the latter indicator? As household consumption is a major component of GDP, this research project will study the potential use of Bayesian VARs with a mix of traditional economic data such as disposable income and an alternative data source which is Google Trends to forecast this indicator.
+> **Abstract.**  Can Bayesian VARs and alternative data help better estimate the future state of household final consumption expenditures in the US? As household consumption is a major component of GDP, this research project will study the potential use of Bayesian VARs with a mix of traditional economic data such as disposable income and an alternative data source which is Google Trends to forecast this indicator.
 
 > **Keywords.** Bayesian Vars, Google Trends, new data types
 
@@ -37,6 +37,8 @@ This paper will compute and compare the forecasts of PCE in the US from Bayesian
 
 To forecast PCE, we will construct a dataset which contains two types of variables: traditional macroeconomic indicators and alternative variables.
 
+### Traditional data
+
 The traditional variables included in this analysis were collected from the fredr package and will be:
 
 -   Real personal consumption expenditures
@@ -53,11 +55,6 @@ The traditional variables included in this analysis were collected from the fred
 
 -   Home price index
 
--   Google Trends series for PCE of durable goods
-
--   Google Trends series for PCE of non-durable goods
-
--   Google Trends series for PCE of services
 
 Incorporating traditional economic variables along alternative data in this exercise is important as we do not want to fall in the "Big Data hubris" trap introduced by (Lazer et al., 2014). The "Big Data Hubris" is the problematic assumption that alternative data or big data can be used as a replacement for traditional data rather than a supplement. To prevent this, combining non-standard and standard variables together can lead to greater value. Moreover, previous extensive literature already has recognized the predictive power of these macroeconomic variables. For instance, previous research have identified co-movements of most common consumer sentiment indicators and real PCE (Schimdt and Vosen, 2009). 
 
@@ -96,7 +93,6 @@ inc<-xts(inc.dl$value, inc.dl$date)
 #Inflation-Consumer Price Index (monthly)
 cpi.dl<-fredr(series_id = "USACPIALLMINMEI", observation_start = as.Date("2004-01-01"), observation_end = as.Date("2023-02-01"))
 cpi<-xts(cpi.dl$value, cpi.dl$date)
-#cpi <- 100*diff(temp_cpi)/temp_cpi
 
 
 #University of Michigan Consumer Sentiment UMCSENT (monthly)
@@ -132,49 +128,60 @@ Y.df  <- data.frame(pce, inc ,cpi,  consum_sent, mortgage_rate, unemp_rate, home
 
 varname_vec <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index")
 colnames(Y.df) <- varname_vec
+
+plot_pce <- ggplot(data=pce.dl, aes(x=date, y=value))+ scale_y_continuous(labels=scales::comma_format(big.mark=','))+ xlab(NULL)+ ylab(NULL) + geom_line(color="#8DD3C7") +ggtitle("Real PCE") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_inc <- ggplot(data=inc.dl, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#8DD3C7") +ggtitle("Real personal disposable income") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_sent <- ggplot(data=consum_sent.dl, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Consumer sentiment indicator") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_cpi <- ggplot(data=cpi.dl, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Consumer Price Index") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_mortgage <- ggplot(data=mortgage_rate.daily, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#8DD3C7") +ggtitle("Mortgage rate") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_unemp <- ggplot(data=unemp_rate.dl, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#8DD3C7") +ggtitle("Unemployment rate") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_homeprice <-ggplot(data=home_price.dl, aes(x=date, y=value)) + xlab(NULL)+ ylab(NULL)+ scale_y_continuous(labels=scales::comma_format(big.mark=',')) + geom_line(color="#BEBADA") +ggtitle("Home Price Index") + theme(plot.title = element_text(size=12))+ theme_minimal()
+plot_pce+plot_inc+plot_sent+plot_cpi+plot_mortgage+plot_unemp+ plot_homeprice +plot_layout(ncol=2,nrow=4,heights = c(2,2))
+
+
 ```
 
+### Alternative data
 
-As for the alternative data, a Google Trends index will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides weekly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded using the R package "gtrendsR". The Google Trends index will be constructed based on the methodology presented in Schmidt and Vosen (2009). However, we will adapt their approach to match Australian specifies. Therefore, the specific keywords to construct the index have yet to be chosen. Moreover, Google Trends have been quite extensively studied to forecast labor market indicators but only a few articles have focused on PCE.
+As for the alternative data, Google Trends variables will be included. Google Trends is a tool which reveals how frequently a certain keyword has been searched for on the Google web browser. The platform provides daily, weekly or monthly aggregated time series starting in 2004 for a specific keyword that can be directly downloaded on the Google Trends website. The Google Trends indices will be constructed based on the methodology presented in Schmidt and Vosen (2009) and Woo and Owen (2018). First, we downloaded the Google Trends (GT) time series from 2004-01 to 2023-02 of consumption relevant categories that represent the most the PCE product categories defined by the BEA's national income and product accounts. These categories were first identified by Schmidt and Vosen (2009) and later were adapted by Woo and Owen (2018) as some GT categories were removed or added since. In total, 72 series were collected at a monthly frequency. Second, we conducted a Principal Component Analysis (PCA) to reduce the dimensionality of this dataset. After this analysis, 4 alternative variables are added in our dataset to forecast PCE:
 
-##### Figure 1. Time series plots of the alternative variables {style="text-align: center;"}
+-   Transformed Google Trends series for PCE of durable goods
+
+-   Transformed Google Trends series for PCE of non-durable goods (principal component 1)
+
+-   Transformed Google Trends series for PCE of non-durable goods (principal component 2)
+
+-   Transformed Google Trends series for PCE of services
 
 ## Preliminary data analysis
 
 ### Augmented Dickey-Fuller test for unit roots of traditional variables
-##### Table 1. ADF results for traditional log transformed variables {style="text-align: center;"}
+##### Table 1. ADF results for traditional variables {style="text-align: center;"}
 ```{r ADF on log data, echo = F, warning=FALSE, message = FALSE}
-##### on log data
-# Transform into natural logs
-df.log <- data.frame(log(pce),
-                     log(inc),
-                     log(cpi),
-                     log(consum_sent),
-                     (mortgage_rate),
-                     (unemp_rate),
-                     log(home_price))
+# Merge data into one matrix
+Y.df  <- data.frame(pce, inc ,cpi,  consum_sent, mortgage_rate, unemp_rate, home_price)
 
-colnames(df.log) <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index")
+varname_vec <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index")
+colnames(Y.df) <- varname_vec
 
-adf.log.result <- as.data.frame(matrix(nrow=7,ncol=6,NA))
+adf.result <- as.data.frame(matrix(nrow=7,ncol=6,NA))
 varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
-colnames(adf.log.result) <- varname_adf
+colnames(adf.result) <- varname_adf
 
 for (i in 1:ncol(Y.df)){
   adf <- adf.test(Y.df[,i])
-  adf.log.result[i,1] <- varname_vec[i]
-  adf.log.result[i,2] <- adf[1]
-  adf.log.result[i,3] <- adf[2]
-  adf.log.result[i,4] <- adf[3]
-  adf.log.result[i,5] <- adf[4]
+  adf.result[i,1] <- varname_vec[i]
+  adf.result[i,2] <- adf[1]
+  adf.result[i,3] <- adf[2]
+  adf.result[i,4] <- adf[3]
+  adf.result[i,5] <- adf[4]
   if (adf[4]<=0.05){
-    adf.log.result[i,6] <- "Stationary"  
+    adf.result[i,6] <- "Stationary"  
   } else {
-    adf.log.result[i,6] <- "Non-stationary"
+    adf.result[i,6] <- "Non-stationary"
   }
 }
-
-paged_table(as.data.frame(adf.log.result))
+paged_table(as.data.frame(adf.result))
 
 ```
 
@@ -220,19 +227,6 @@ if (adf[4]<=0.05){
     adf.sec.result[1,6] <- "Non-stationary"
 }
 
-#Apply transformations
-df.log <- data.frame(log(pce),
-                     log(inc),
-                     log(cpi),
-                     log(consum_sent),
-                     mortgage_rate,
-                     unemp_rate,
-                     log(home_price))
-
-colnames(df.log) <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index")
-
-
-
 paged_table(as.data.frame(adf.sec.result))
 
 ```
@@ -260,61 +254,143 @@ for (i in 1:ncol(GT_dur_g_adf)){
   }
 }
 
-paged_table(as.data.frame(adf.sec.result))
+paged_table(as.data.frame(adf.dur.result))
 
 ```
 ##### Table 5. ADF results for the first difference of GT for PCE of non-durable goods
 ```{r ADF on first diff of non_durable goods GT, echo = F, warning=FALSE, message = FALSE}
-# GT durable goods
-adf.dur.result <- as.data.frame(matrix(nrow=22,ncol=6,NA))
+# GT non-durable goods
+adf.ndur.result <- as.data.frame(matrix(nrow=20,ncol=6,NA))
 varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
-colnames(adf.dur.result) <- varname_adf
-GT_dur_g_adf <- GT_dur_g[,3:24]
-colnames <- colnames(GT_dur_g_adf)
+colnames(adf.ndur.result) <- varname_adf
+GT_ndur_g_adf <- GT_ndur_g[,3:22]
+colnames <- colnames(GT_ndur_g_adf)
 
-for (i in 1:ncol(GT_dur_g_adf)){
-  adf <- adf.test(diff(GT_dur_g_adf[,i]))
-  adf.dur.result[i,1] <- colnames[i]
-  adf.dur.result[i,2] <- adf[1]
-  adf.dur.result[i,3] <- adf[2]
-  adf.dur.result[i,4] <- adf[3]
-  adf.dur.result[i,5] <- adf[4]
+for (i in 1:ncol(GT_ndur_g_adf)){
+  adf <- adf.test(diff(GT_ndur_g_adf[,i]))
+  adf.ndur.result[i,1] <- colnames[i]
+  adf.ndur.result[i,2] <- adf[1]
+  adf.ndur.result[i,3] <- adf[2]
+  adf.ndur.result[i,4] <- adf[3]
+  adf.ndur.result[i,5] <- adf[4]
   if (adf[4]<=0.05){
-    adf.dur.result[i,6] <- "Stationary"  
+    adf.ndur.result[i,6] <- "Stationary"  
   } else {
-    adf.dur.result[i,6] <- "Non-stationary"
+    adf.ndur.result[i,6] <- "Non-stationary"
   }
 }
-
-paged_table(as.data.frame(adf.sec.result))
+paged_table(as.data.frame(adf.ndur.result))
 
 ```
 ##### Table 6. ADF results for the first difference of GT for PCE of services
 ```{r ADF on first diff of services GT, echo = F, warning=FALSE, message = FALSE}
-# GT durable goods
-adf.dur.result <- as.data.frame(matrix(nrow=22,ncol=6,NA))
+# GT services
+adf.ser.result <- as.data.frame(matrix(nrow=24,ncol=6,NA))
 varname_adf <- c("Variable", "Statistic", "parameter", "alternative", "p.value", "result")
-colnames(adf.dur.result) <- varname_adf
-GT_dur_g_adf <- GT_dur_g[,3:24]
-colnames <- colnames(GT_dur_g_adf)
+colnames(adf.ser.result) <- varname_adf
+GT_serv_adf <- GT_serv[,3:26]
+colnames <- colnames(GT_serv_adf)
 
-for (i in 1:ncol(GT_dur_g_adf)){
-  adf <- adf.test(diff(GT_dur_g_adf[,i]))
-  adf.dur.result[i,1] <- colnames[i]
-  adf.dur.result[i,2] <- adf[1]
-  adf.dur.result[i,3] <- adf[2]
-  adf.dur.result[i,4] <- adf[3]
-  adf.dur.result[i,5] <- adf[4]
+for (i in 1:ncol(GT_serv_adf)){
+  adf <- adf.test(diff(GT_serv_adf[,i]))
+  adf.ser.result[i,1] <- colnames[i]
+  adf.ser.result[i,2] <- adf[1]
+  adf.ser.result[i,3] <- adf[2]
+  adf.ser.result[i,4] <- adf[3]
+  adf.ser.result[i,5] <- adf[4]
   if (adf[4]<=0.05){
-    adf.dur.result[i,6] <- "Stationary"  
+    adf.ser.result[i,6] <- "Stationary"  
   } else {
-    adf.dur.result[i,6] <- "Non-stationary"
+    adf.ser.result[i,6] <- "Non-stationary"
   }
 }
 
 paged_table(as.data.frame(adf.sec.result))
 
 ```
+
+### Principal Component Analysis on Google Trends data
+Following the methodology in Schimdt and Vosen (2009), we will conduct a Principal Component Analysis on all Google Trends series to reduce the dimensionality of our dataset. The PCA is applied 3 times: one for the GT series related to PCE of durable goods, one for the GT series related to PCE of non-durable goods and one for the GT series related to PCE of services. We proceed as following: 
+
+1. Normalising the data
+
+```{r normalising, echo = F, warning=FALSE, message = FALSE}
+library(corrr)
+library(ggcorrplot)
+library(FactoMineR)
+
+#normalise the data
+GT_dur_normalized <- scale(GT_dur_g[,3:24])
+GT_ndur_normalized <- scale(GT_ndur_g[,3:22])
+GT_sv_normalized <- scale(GT_serv[,3:26])
+```
+
+2. Computing the correlation matrices
+
+```{r correlation matr, echo = F, warning=FALSE, message = FALSE}
+#correlation matrix
+corr_matrix_dur <- cor(GT_dur_normalized )
+ggcorrplot(corr_matrix_dur)
+
+corr_matrix_ndur <- cor(GT_ndur_normalized)
+ggcorrplot(corr_matrix_ndur)
+
+corr_matrix_sv <- cor(GT_sv_normalized)
+ggcorrplot(corr_matrix_sv)
+```
+The correlation matrices demonstrate strong relations between most of the variables. We therefore conclude that a PCA is appropriate.
+
+3. Applying PCA on the correlation matrices
+
+For PCE of durable goods, the summary table of PCA results show that the cumulative proportion of the first 2 components (Comp.1 and Comp.2) explain 88.05% of the total variance. The first component accounts for 72.32% of the variance and component 2 for only 15.73%. Therefore we make the choice to only use component 1.
+
+##### Table 7. PCA results for GT for PCE of durable goods
+
+```{r PCA dur, echo = F, warning=FALSE, message = FALSE}
+dur.pca <- prcomp(GT_dur_normalized)
+GT_dur <- dur.pca$x
+GT_dur <- as.data.frame(GT_dur[1:230,1])
+summary(dur.pca)
+```
+For PCE of non-durable goods, we also take the first and second components as the first one only accounts for 47%. Together the two components explain 80.33% of the total variance.  
+
+##### Table 8. PCA results for GT for PCE of non-durable goods
+
+```{r PCA ndur, echo = F, warning=FALSE, message = FALSE}
+
+ndur.pca <- prcomp(GT_ndur_normalized)
+GT_ndur <- ndur.pca$x
+GT_ndur <- as.data.frame(GT_ndur[1:230,1:2])
+summary(ndur.pca)
+```
+
+For PCE of services, we also take only the first component as it accounts for 62.5%.
+
+##### Table 9. PCA results for GT for PCE of services
+
+```{r PCA serv, echo = F, warning=FALSE, message = FALSE}
+sv.pca <- prcomp(GT_sv_normalized)
+GT_sv <- sv.pca$x
+GT_sv <- as.data.frame(GT_sv[1:230,1])
+summary(sv.pca)
+
+#Data set with transformed traditional and alternative variables
+df.log <- data.frame(log(pce),
+                     log(inc),
+                     log(cpi),
+                     log(consum_sent),
+                     mortgage_rate,
+                     unemp_rate,
+                     log(home_price),
+                     GT_dur,
+                     GT_ndur,
+                     GT_sv)
+
+colnames(df.log) <- c("PCE", "Real disposable income","CPI", "Consumer Confidence Index","Mortgage rate","Unemployment rate", "Home price index", "GT for PCE durable goods", "GT for PCE non-durable goods(PC1)","GT for PCE non-durable goods(PC2)","GT for PCE services")
+```
+
+After conducting the PCA analysis and keeping the first principal component which explains a considerable proportion of the variances, we obtain three transformed variables names GT_dur, GT_ndur and GT_sv.
+
 # The Modelling Framework 
 
 ## The Baseline Model
@@ -329,13 +405,6 @@ The model used for the forecasting experiment is a VAR(p) model:
 
 Where $N=11$ and $y_t$ is the vector of 11 variables:
 
-$$
-y_t=\left(\begin{array}{cc}\operatorname{pce}_t & =\text {Real PCE }  \\\operatorname{inc}_t & =\text { Real household disposable income } \\\text { cpi }_t & =\text { Consumer price index } \\\text { consum_sent}_t & =\text { Consumer sentiment indicator }\\\text { mortgage_rate}_t & =\text { Mortgage rate }\\\text { unemp_rate}_t & =\text { Unemployment rate }\\\text { home_price}_t & =\text { Home price index } \\\text{gt_dur_goods}_t & =\text { Google Trends index for PCE of durable goods }
-\\\text{gt_ndur_goods}_t & =\text { Google Trends index for PCE of non durable goods }
-\\\text{gt_services}_t & =\text { Google Trends index for PCE of services }
-\end{array}\right)
-$$
-
 The model can also be written in matrix notation:
 
 ```{=tex}
@@ -344,7 +413,7 @@ Y & =X A+E \\E \mid X & \sim \mathcal{M N} _{T \times N}\left(\mathbf{0}_{T \tim
 \end{aligned}
 ```
 
-Where $Y$ is a $T\times11$ matrix, $X$ is a $T\times(1+(11\times p))$, $A$ is a $(1+(11\times p))\times 11$ matrix that contains the relationships between the variables and $E$ is a $T\times11$. T and p are yet to be determined during the continuation of this research project.
+Where $Y$ is a $T\times11$ matrix, $X$ is a $T\times(1+(11\times p))$, $A$ is a $(1+(11\times p))\times 11$ matrix that contains the relationships between the variables and $E$ is a $T\times11$. $p$ is 4 and we have 230 observations of monthly data.
 
 ### The Likelihood function
 
@@ -376,41 +445,37 @@ p(A, \Sigma) \propto & \operatorname{det}(\Sigma)^{-\frac{N+K+\underline{\nu}+1}
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\}
 \end{aligned}
 $$
-In the code, we set:
-A as 
-V as
-S as 
-Nu as 
+
+As we follow the Minnesota prior specifications, we set in the code:
+
+$$
+\underline{A}=[0_{N\times 1}\space\space\space I_N \space\space\space 0_{N\times (p-1)N} ]'
+\\ \underline{V}=diag([\kappa _2 \space\space\kappa_1(p^{-2}\otimes 1'_N)]
+\\ \underline{\nu}=N+1
+$$
 
 ### The posterior distribution
 #### The Derivations of the posterior distribution
 
 $$
 \begin{aligned}
-p(A,\Sigma \mid Y,X) \propto L(A, \Sigma \mid Y,X) p(A,\Sigma) = L(A, \Sigma \mid Y,X) p(A\mid\Sigma)p(\Sigma)
-\end{aligned}
-$$
-
-Let's focus on the kernel
-
-$$
-\begin{aligned}
-p(A,\Sigma \mid Y,X) \propto & det (\Sigma)^{-\frac{T}{2}} \\
+p(A, \Sigma \mid Y, X) \propto & \operatorname{det}(\Sigma)^{-\frac{T}{2}} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})\right]\right\} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})\right]\right\} \\
-& \times det(\Sigma)^{-\frac{N+K+\underline{\nu}+1}{2}} \\
+& \times \operatorname{det}(\Sigma)^{-\frac{N+K+\underline{+}+1}{2}} \\
 & \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right]\right\} \\
-& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\} \\
-
-& = \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
-& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 } 
-
-[\color{green}{(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})}\right\} \\
-&\color{green}{\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}}
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1} \underline{S}\right]\right\},
+\end{aligned}
+$$
+$$
+\begin{aligned}
+& p(A, \Sigma \mid Y, X) \propto \operatorname{det}(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
+& \times \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma ^ { - 1 } \left[(A-\widehat{A})^{\prime} X^{\prime} X(A-\widehat{A})+(A-\underline{A})^{\prime} \underline{V}^{-1}(A-\underline{A})\right.\right.\right. \\
+& \left.\left.\left.+(Y-X \widehat{A})^{\prime}(Y-X \widehat{A})+\underline{S}\right]\right]\right\}
 \end{aligned}
 $$
 
-We can now complete the squares for the green part of the equation.
+We can now complete the squares.
 
 ```{=tex}
 \begin{aligned}
@@ -487,7 +552,7 @@ $$
 N       = ncol(df.log)
 p       = 4
 K       = 1+N*p
-S       = c(5000,50000)
+S       = c(500,5000)
 set.seed(123456)
 
 ### Create Y and X matrices
@@ -564,6 +629,19 @@ round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 #| message: false
 #| warning: false
 round(apply(posterior.draws$Sigma.posterior, 1:2, mean),3)
+```
+
+```{r baseline plots}
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow=c(2,2))
+hist(posterior.draws$Sigma.posterior[2,1,1:sum(S)], col="#8DD3C7", xlab="Value of Sigma", ylab="Frequency", main ="Histogram of draws of Sigma")
+plot.ts(posterior.draws$Sigma.posterior[2,1,1:sum(S)],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of sigma")
+hist(posterior.draws$Sigma.posterior[1,1,1:sum(S)], col="#8DD3C7", xlab="Value of A", ylab="Frequency", main="Histogram of draws of A")
+plot.ts(posterior.draws$Sigma.posterior[1,1,1:sum(S)],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of A")
+
 ```
 
 ## The extended model
@@ -677,7 +755,7 @@ Let's adapt the BVAR function to the extended model.
 ####Extended model
 
 ### Modify the priors
-S       = c(5000,50000)
+S       = c(500,5000)
 kappa.1           = 1
 kappa.2           = 10
 initial_kappa     = 100
@@ -752,6 +830,21 @@ round(apply(posterior.ext.draws$A.posterior, 1:2, mean),3)
 round(mean(posterior.ext.draws$kappa.posterior),3)
 ```
 
+```{r extension plots}
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfrow=c(3,2))
+hist(posterior.ext.draws$Sigma.posterior[2,1,(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of Sigma", ylab="Frequency", main ="Histogram of draws of Sigma")
+plot.ts(posterior.ext.draws$Sigma.posterior[2,1,(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of sigma")
+hist(posterior.ext.draws$A.posterior[1,1,(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of A", ylab="Frequency", main="Histogram of draws of A")
+plot.ts(posterior.ext.draws$A.posterior[1,1,(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of A")
+hist(posterior.ext.draws$kappa.posterior[(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of k", ylab="Frequency", main="Histogram of draws of k")
+plot.ts(posterior.ext.draws$kappa.posterior[(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of k")
+
+```
+
 # The baseline model enhanced by Stochastic Volatility conditional heteroskedasticity
 
 Let's reconsider our baseline model and adapt it by specifying the conditional heteroskedasticity: 
@@ -764,23 +857,25 @@ $$
 Where $\sigma^2 = (\sigma^2_1,...,\sigma^2_T)'$
 
 ## The Likelihood function
-$$
+
+```{=tex}
 \begin{aligned}
 Y \mid X,A,\Sigma & \sim \mathcal{M N} _{T \times N}\left(XA, \Sigma, diag(\sigma^2)\right)
 \end{aligned}
-$$
+```
 
 
-$$
+```{=tex}
 \begin{aligned}
 L(A, \Sigma \mid Y, X) & \propto det(\Sigma)^{-\frac{T}{2}} \exp \left\{-\frac{1}{2} \operatorname{tr}\left[\Sigma^{-1}(Y-X A)^{\prime}diag(\sigma^2)^{-1}(Y-X A)\right]\right\} \\
 \end{aligned}
-$$
+```
+
 ## The posterior distribution
+
 If we use the same prior distributions as in the baseline model and the above likelihood function, we obtain the following full conditional joint posterior distribution: 
 
-$$
-
+```{=tex}
 \boxed{
 \begin{array}{rcl}
 &p(A,\Sigma \mid Y,X, \sigma^2)= =\mathcal{M N}_{K\times N}(\overline{A},\overline{V},\overline{S},\overline{\nu})\\
@@ -790,9 +885,10 @@ $$
 & \overline{S}=\underline{S}+Y^\prime diag(\sigma^2)^{-1} Y+\underline{A}^\prime \underline{V}^{-1}\underline{A}-\overline{A}^\prime \overline{V}^{-1}\overline{A}
 \end{array}
 }
+```
 
-$$
 ## The Code for Bayesian VAR estimation
+
 ```{r bvar sv extension}
 #| echo: true
 #| message: false
@@ -882,7 +978,7 @@ library(progress)
 N       = ncol(df.log)
 p       = 4
 K       = 1+N*p
-S       = c(500,5000)
+S       = c(50,1500)
 h       = 20
 set.seed(123456)
 
@@ -998,10 +1094,26 @@ The output of the function is:
 #| message: false
 #| warning: false
 
-round(apply(posterior.ext.draws$Sigma.posterior, 1:2, mean),3)
-round(apply(posterior.ext.draws$A.posterior, 1:2, mean),3)
-round(mean(posterior.ext.draws$kappa.posterior),3)
+round(apply(posterior.sv.draws$Sigma.posterior, 1:2, mean),3)
+round(apply(posterior.sv.draws$A.posterior, 1:2, mean),3)
+round(apply(posterior.sv.draws$Sigma2.posterior, 1, mean),3)
 ```
+
+```{r sv plots}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+par(mfrow=c(3,2))
+hist(posterior.sv.draws$Sigma.posterior[2,1,(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of Sigma", ylab="Frequency", main ="Histogram of draws of Sigma")
+plot.ts(posterior.draws$Sigma.posterior[2,1,(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of sigma")
+hist(posterior.sv.draws$Sigma.posterior[1,1,(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of A", ylab="Frequency", main="Histogram of draws of A")
+plot.ts(posterior.sv.draws$Sigma.posterior[1,1,(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of A")
+hist(posterior.sv.draws$Sigma2.posterior[1,(S[1]+1):S[2]], col="#8DD3C7", xlab="Value of sigma2", ylab="Frequency", main="Histogram of draws of sigma2")
+plot.ts(posterior.sv.draws$Sigma2.posterior[1,(S[1]+1):S[2]],col="#8DD3C7", xlab="Iteration s", ylab=NULL, main="Plot of posterior draws of sigma2")
+```
+
 
 # Forecasting
 
@@ -1033,7 +1145,7 @@ Y^{(s)}_{t+h} \sim \mathcal{N}_{hN}(Y_{t+h\mid t}(A^{(s)}), Var[Y_{t+h \mid t} \
 library(mvtnorm)
 library(progress)
 h = 36
-S = 5000
+S = 1000
 Y.h         = array(NA,c(h,N,S))
 
 #Progress bar
@@ -1099,7 +1211,7 @@ We can repeat the same process for the extended model.
 library(mvtnorm)
 library(progress)
 h = 36
-S = 500
+S = 1000
 Y.h         = array(NA,c(h,N,S))
 
 #Progress bar
@@ -1156,7 +1268,7 @@ dev.off()
 
 ```
 
-## Forecasting with the extended model 
+## Forecasting with the second extended model 
 ```{r forecasting the SV model}
 #| echo: true
 #| message: false
@@ -1316,9 +1428,6 @@ round(apply(posterior.draws$A.posterior, 1:2, mean),3)
 ```
 The results from the BVAR_extension function show that the correctness of the model. 
 
-# Conclusion
-
-
 ## References
 
 Aprigliano, V., Ardizzi, G., & Monteforte, L. (2019), "Using Payment System Data to Forecast Economic Activity," International Journal of Central Banking, International Journal of Central Banking, vol. 15(4), pages 55-80, October.
@@ -1338,5 +1447,7 @@ Gil, M., Perez, J. J., Sanchez Fuentes, A. J., & Urtasun, A. (2018). "Nowcasting
 Lazer, D., Kennedy, R., King, G., & Vespignani, A. (2014). The Parable of Google Flu: Traps in Big Data Analysis. Science (New York, N.Y.), 343, 1203--1205. https://doi.org/10.1126/science.1248506
 
 Schmidt, T., & Vosen, S. (2009). Forecasting Private Consumption: Survey-Based Indicators vs. Google Trends. Journal of Forecasting, 30. https://doi.org/10.2139/ssrn.1514369
+
+Woo, J., & Owen, A. (2018). Forecasting Private Consumption with Google Trends Data. Journal of Forecasting, 38. https://doi.org/10.1002/for.2559
 
 :::
